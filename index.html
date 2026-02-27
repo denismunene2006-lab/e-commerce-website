@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UrbanCart - Modern E-Commerce</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo">UrbanCart</div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#shop">Shop</a>
+      <a href="#mega-shop">Mega Shop</a>
+      <a href="#categories">Categories</a>
+      <a href="#deals">Deals</a>
+      <a href="#about">About</a>
+    </nav>
+    <div class="top-actions">
+      <span id="authStatus" class="auth-status">Guest</span>
+      <button id="authBtn" class="auth-btn">Log In</button>
+      <button id="logoutBtn" class="auth-btn hidden">Log Out</button>
+      <button id="cartBtn" class="cart-btn">Cart (<span id="cartCount">0</span>)</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+      <p class="tag">New Collection 2026</p>
+      <h1>Upgrade your lifestyle with premium picks.</h1>
+      <p>Discover curated fashion, gadgets, and home essentials built for modern living.</p>
+      <a href="#shop" class="btn">Shop Now</a>
+    </div>
+    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=80" alt="Shopping hero" />
+  </section>
+
+  <section id="categories" class="categories">
+    <h2>Shop by Category</h2>
+    <div class="cat-grid">
+      <article><img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80" alt=""><h3>Fashion</h3></article>
+      <article><img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80" alt=""><h3>Electronics</h3></article>
+      <article><img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=900&q=80" alt=""><h3>Home Decor</h3></article>
+      <article><img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=80" alt=""><h3>Beauty</h3></article>
+      <article><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80" alt=""><h3>Sports</h3></article>
+      <article><img src="https://images.unsplash.com/photo-1555529771-35a4d6a3f35b?auto=format&fit=crop&w=900&q=80" alt=""><h3>Accessories</h3></article>
+    </div>
+  </section>
+
+  <section id="shop" class="products-wrap">
+    <h2>Trending Products</h2>
+    <div class="products" id="products"></div>
+  </section>
+
+  <section class="marquee">
+    <div class="marquee-track">
+      <span>Free Shipping Over $50</span>
+      <span>24/7 Support</span>
+      <span>Secure Checkout</span>
+      <span>7-Day Returns</span>
+      <span>Limited Flash Offers</span>
+      <span>Free Shipping Over $50</span>
+      <span>24/7 Support</span>
+      <span>Secure Checkout</span>
+      <span>7-Day Returns</span>
+      <span>Limited Flash Offers</span>
+    </div>
+  </section>
+
+  <section id="deals" class="banner">
+    <h2>Flash Sale: Up to 50% Off</h2>
+    <p>Limited-time deals on best-selling products.</p>
+    <a href="#shop" class="btn btn-dark">Grab Deals</a>
+  </section>
+
+  <section id="mega-shop" class="products-wrap mega-wrap">
+    <div class="section-head">
+      <h2>Mega Product Catalog</h2>
+      <p>Browse our complete collection with hundreds of products.</p>
+    </div>
+    <div class="products mega-products" id="megaProducts"></div>
+  </section>
+
+  <section class="feature-strip">
+    <article>
+      <h3>10k+ Daily Orders</h3>
+      <p>Top-rated products shipped every day.</p>
+    </article>
+    <article>
+      <h3>250+ Brands</h3>
+      <p>Local and international premium selections.</p>
+    </article>
+    <article>
+      <h3>99.2% Satisfaction</h3>
+      <p>Verified customer ratings and feedback.</p>
+    </article>
+  </section>
+
+  <section id="about" class="about">
+    <h2>Why UrbanCart?</h2>
+    <div class="about-grid">
+      <div><h3>Fast Delivery</h3><p>Shipping in 24-48 hours in major cities.</p></div>
+      <div><h3>Secure Payments</h3><p>Trusted payment gateways and encrypted checkout.</p></div>
+      <div><h3>Easy Returns</h3><p>7-day no-stress return policy on most items.</p></div>
+    </div>
+  </section>
+
+  <section class="testimonial-wrap">
+    <h2>What Customers Say</h2>
+    <div class="testimonial-grid">
+      <article>
+        <p>"Clean interface, super fast checkout, and quality products every time."</p>
+        <h4>Riya M.</h4>
+      </article>
+      <article>
+        <p>"I ordered multiple items and all arrived quickly in perfect condition."</p>
+        <h4>Daniel K.</h4>
+      </article>
+      <article>
+        <p>"The mega catalog makes it easy to find everything I need in one place."</p>
+        <h4>Aman P.</h4>
+      </article>
+    </div>
+  </section>
+
+  <section class="newsletter">
+    <h2>Get Weekly Drops</h2>
+    <p>Join our list for launch alerts, member-only offers, and trend updates.</p>
+    <form class="newsletter-form">
+      <input type="email" placeholder="Enter your email" aria-label="Email" />
+      <button type="button" class="btn">Subscribe</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 UrbanCart. All rights reserved.</p>
+  </footer>
+
+  <aside id="cartDrawer" class="cart-drawer">
+    <div class="cart-head">
+      <h3>Your Cart</h3>
+      <button id="closeCart">X</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-foot">
+      <p>Total: $<span id="cartTotal">0.00</span></p>
+      <button id="checkoutBtn" class="btn checkout">Pay with M-Pesa</button>
+    </div>
+  </aside>
+
+  <div id="authModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 id="authTitle">Log In</h3>
+        <button id="closeAuthModal" class="modal-close">X</button>
+      </div>
+      <p id="authMessage" class="auth-message"></p>
+      <form id="authForm" class="auth-form">
+        <input id="authName" type="text" placeholder="Full name (signup only)" />
+        <input id="authEmail" type="email" placeholder="Email" required />
+        <input id="authPassword" type="password" placeholder="Password" required minlength="6" />
+        <button type="submit" class="btn auth-submit">Continue</button>
+      </form>
+      <button id="toggleAuthMode" class="auth-switch">Create an account</button>
+    </div>
+  </div>
+  <div id="paymentModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>M-Pesa Checkout</h3>
+        <button id="closePaymentModal" class="modal-close">X</button>
+      </div>
+      <p class="payment-receiver">Receiver: <strong>0710236087</strong></p>
+      <p id="paymentMessage" class="auth-message"></p>
+      <form id="paymentForm" class="auth-form">
+        <input id="paymentPhone" type="tel" placeholder="Your M-Pesa number (07XXXXXXXX)" required />
+        <input id="paymentAmount" type="number" min="1" step="1" required />
+        <button type="submit" class="btn auth-submit">Initiate M-Pesa Payment</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="javascript.js"></script>
+</body>
+</html>
+
+
