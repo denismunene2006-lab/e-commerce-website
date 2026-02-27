@@ -1,97 +1,60 @@
-# UrbanCart E-Commerce Website
+# UrbanCart
 
-UrbanCart is a full-stack e-commerce website with:
-- Modern storefront UI
-- Product catalog + cart drawer
-- User authentication (register, login, profile)
-- M-Pesa STK Push payment initiation
+A simple e-commerce website I built with a Node.js backend.
 
-## Tech Stack
+It includes:
+- Product listing and cart
+- User signup/login
+- M-Pesa checkout (STK push)
 
-- Frontend: HTML, CSS, Vanilla JavaScript
-- Backend: Node.js, Express
-- Auth: JWT + bcrypt
-- Payment: Safaricom Daraja (M-Pesa STK Push)
-- Storage: JSON files in `data/` (simple local storage)
+## Stack
 
-## Project Structure
+- HTML, CSS, JavaScript
+- Node.js + Express
+- JWT auth + bcrypt
+- Safaricom Daraja API
 
-- `index.html` - storefront and modals
-- `style.css` - UI styles
-- `javascript.js` - frontend app logic (catalog, cart, auth, payment calls)
-- `server.js` - API server (auth + M-Pesa)
-- `data/` - runtime JSON storage (`users.json`, `mpesa-transactions.json`)
-- `.env.example` - environment variable template
+## Files
 
-## Prerequisites
+- `index.html` - main storefront
+- `style.css` - styles
+- `javascript.js` - frontend logic
+- `server.js` - backend API
+- `.env.example` - env template
 
-- Node.js 18+ (includes npm)
+## Run Locally
 
-## Setup
-
-1. Install dependencies:
+1. Install packages:
 
 ```bash
 npm install
 ```
 
-2. Create environment file:
+2. Create env file:
 
 ```bash
 copy .env.example .env
 ```
 
-3. Update `.env` values, especially M-Pesa credentials.
+3. Update your Daraja credentials in `.env`.
 
-4. Start backend API:
+4. Start server:
 
 ```bash
 npm start
 ```
 
-5. Open `index.html` with a local server (for example VS Code Live Server).
+5. Open `index.html` using a local server (like Live Server).
 
-## Environment Variables
+## Main API Routes
 
-From `.env.example`:
-
-- `PORT` - API port (default `4000`)
-- `JWT_SECRET` - JWT signing secret
-- `MPESA_ENV` - `sandbox` or `production`
-- `MPESA_CONSUMER_KEY` - Daraja app consumer key
-- `MPESA_CONSUMER_SECRET` - Daraja app consumer secret
-- `MPESA_SHORTCODE` - business shortcode
-- `MPESA_PARTY_B` - usually same as shortcode for STK push
-- `MPESA_PASSKEY` - Daraja Lipa Na M-Pesa passkey
-- `MPESA_CALLBACK_URL` - public callback endpoint URL
-- `MPESA_TRANSACTION_TYPE` - usually `CustomerPayBillOnline`
-- `MPESA_RECEIVER_MSISDN` - receiver number (currently `0710236087`)
-
-## API Endpoints
-
-### Auth
 - `POST /api/register`
 - `POST /api/login`
 - `GET /api/me`
-
-### Payment
-- `POST /api/payments/mpesa` - initiate STK push
-- `POST /api/payments/mpesa/callback` - Daraja callback endpoint
-
-### Utility
+- `POST /api/payments/mpesa`
+- `POST /api/payments/mpesa/callback`
 - `GET /api/health`
 
-## Notes for M-Pesa
+## Note
 
-- In `sandbox`, real phone prompts are not guaranteed on a live handset.
-- For production STK push, use valid live Daraja credentials and approved business setup.
-- `MPESA_CALLBACK_URL` must be publicly reachable (not localhost).
-
-## Git Workflow
-
-```bash
-git add .
-git commit -m "Update project"
-git push
-```
-
+For real STK push, use production Daraja credentials and a public callback URL.
