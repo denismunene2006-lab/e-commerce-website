@@ -6,7 +6,7 @@ This project is **not production-ready** and is intended for demonstration only.
 
 ## Links
 
-- website: [https://github.com/denismunene2006-lab/e-commerce-website](https://github.com/denismunene2006-lab/e-commerce-website)
+- website: [https://denismunene2006-lab/e-commerce-website](https://denismunene2006-lab/e-commerce-website)
 - Safaricom Daraja API docs: [https://developer.safaricom.co.ke/](https://developer.safaricom.co.ke/)
 
 ## Features
