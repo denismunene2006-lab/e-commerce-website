@@ -1,26 +1,36 @@
 # UrbanCart
 
-A simple e-commerce website I built with a Node.js backend.
+UrbanCart is a **demo** e-commerce website built with a Node.js/Express backend and a vanilla HTML/CSS/JS frontend. It showcases a basic storefront flow (products, cart, and authentication) plus an M-Pesa STK push integration for learning and portfolio purposes.
 
-It includes:
+This project is **not production-ready** and is intended for demonstration only.
+
+## Links
+
+- Repository: [https://github.com/denismunene2006-lab/e-commerce-website](https://github.com/denismunene2006-lab/e-commerce-website)
+- Safaricom Daraja API docs: [https://developer.safaricom.co.ke/](https://developer.safaricom.co.ke/)
+
+## Features
+
 - Product listing and cart
 - User signup/login
-- M-Pesa checkout (STK push)
+- JWT auth + bcrypt
+- M-Pesa checkout (STK push, sandbox-ready)
+- Health check endpoint
 
-## Stack
+## Tech Stack
 
 - HTML, CSS, JavaScript
 - Node.js + Express
-- JWT auth + bcrypt
 - Safaricom Daraja API
 
-## Files
+## Project Structure
 
 - `index.html` - main storefront
 - `style.css` - styles
 - `javascript.js` - frontend logic
 - `server.js` - backend API
-- `.env.example` - env template
+- `data/` - local data storage
+- `.env.example` - environment template
 
 ## Run Locally
 
@@ -30,7 +40,7 @@ It includes:
 npm install
 ```
 
-2. Create env file:
+2. Create your env file:
 
 ```bash
 copy .env.example .env
@@ -38,13 +48,13 @@ copy .env.example .env
 
 3. Update your Daraja credentials in `.env`.
 
-4. Start server:
+4. Start the server:
 
 ```bash
 npm start
 ```
 
-5. Open `index.html` using a local server (like Live Server).
+5. Open `index.html` using a local server (for example, Live Server).
 
 ## Main API Routes
 
@@ -55,6 +65,6 @@ npm start
 - `POST /api/payments/mpesa/callback`
 - `GET /api/health`
 
-## Note
+## Notes
 
-For real STK push, use production Daraja credentials and a public callback URL.
+- For real STK push, use production Daraja credentials and a public callback URL.
