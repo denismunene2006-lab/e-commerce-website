@@ -1,53 +1,60 @@
 const API_BASE = "http://localhost:4000/api";
 const MPESA_RECEIVER = "0710236087";
 
-const imagePool = [
-  "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1547949003-9792a18a2601?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1513116476489-7635e79feb27?auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1481349518771-20055b2a7b24?auto=format&fit=crop&w=800&q=80"
+const categories = [
+  {
+    id: "fashion",
+    title: "Fashion",
+    items: [
+      { name: "Leather Jacket", img: "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80" },
+      { name: "Urban Sneakers", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80" },
+      { name: "Chic Handbag", img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80" },
+      { name: "Winter Coat", img: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80" },
+      { name: "Summer Heels", img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80" },
+      { name: "Denim Jeans", img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=800&q=80" }
+    ]
+  },
+  {
+    id: "tech",
+    title: "Electronics",
+    items: [
+      { name: "Wireless Headphones", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80" },
+      { name: "Smart Watch", img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80" },
+      { name: "Gaming Mouse", img: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=800&q=80" },
+      { name: "Mechanical Keyboard", img: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80" },
+      { name: "Bluetooth Speaker", img: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=800&q=80" },
+      { name: "DSLR Camera", img: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80" }
+    ]
+  },
+  {
+    id: "home",
+    title: "Home",
+    items: [
+      { name: "Minimal Lamp", img: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80" },
+      { name: "Succulent Plant", img: "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&fit=crop&w=800&q=80" },
+      { name: "Comfort Chair", img: "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=800&q=80" },
+      { name: "Ceramic Vase", img: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=800&q=80" },
+      { name: "Desk Organizer", img: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" }
+    ]
+  }
 ];
 
-const namePool = [
-  "Leather Jacket",
-  "Wireless Headphones",
-  "Smart Watch",
-  "Minimal Lamp",
-  "Sneakers",
-  "Travel Backpack",
-  "Polarized Sunglasses",
-  "Gaming Mouse",
-  "Mechanical Keyboard",
-  "Streetwear Hoodie",
-  "Desk Organizer",
-  "Bluetooth Speaker",
-  "Power Bank",
-  "Coffee Maker",
-  "Running Shorts",
-  "Yoga Mat",
-  "Monitor Stand",
-  "Phone Case",
-  "Bean Bag Chair",
-  "Portable Projector"
-];
+const adjectives = ["Pro", "Max", "Ultra", "Lite", "Classic", "Modern", "Sleek", "Premium", "Elite", "Core"];
 
-const items = Array.from({ length: 240 }, (_, index) => {
-  const id = index + 1;
-  const baseName = namePool[index % namePool.length];
-  const price = 19.99 + (index % 50) * 3 + (index % 3) * 0.99;
+const items = Array.from({ length: 72 }, (_, index) => {
+  const category = categories[index % categories.length];
+  // Pick item from the new object structure ensuring name/img match
+  const itemTemplate = category.items[Math.floor(index / categories.length) % category.items.length];
+  const variant = adjectives[index % adjectives.length];
+
   return {
-    id,
-    name: `${baseName} ${id}`,
-    price,
-    img: imagePool[index % imagePool.length]
+    id: index + 1,
+    name: `${variant} ${itemTemplate.name}`,
+    category: category.title,
+    price: 19.99 + (index % 15) * 5 + (Math.random() * 10),
+    img: itemTemplate.img,
+    rating: (4 + Math.random()).toFixed(1),
+    reviews: Math.floor(Math.random() * 500) + 10
   };
 });
 
@@ -72,6 +79,7 @@ const toggleAuthMode = document.getElementById("toggleAuthMode");
 const authName = document.getElementById("authName");
 const authEmail = document.getElementById("authEmail");
 const authPassword = document.getElementById("authPassword");
+const togglePassword = document.getElementById("togglePassword");
 const checkoutBtn = document.getElementById("checkoutBtn");
 const paymentModal = document.getElementById("paymentModal");
 const closePaymentModalBtn = document.getElementById("closePaymentModal");
@@ -86,19 +94,53 @@ let currentUser = null;
 function productCard(item) {
   return `
     <article class="product">
-      <img src="${item.img}" alt="${item.name}" loading="lazy" />
-      <h3>${item.name}</h3>
-      <div class="price-row">
-        <span class="price">$${item.price.toFixed(2)}</span>
-        <button class="add" data-id="${item.id}">Add</button>
+      <div class="product-img-wrap">
+        <img src="${item.img}" alt="${item.name}" loading="lazy" />
+        <span class="category-badge">${item.category}</span>
+      </div>
+      <div class="product-details">
+        <div class="product-header">
+          <h3>${item.name}</h3>
+          <div class="rating"><i class="ri-star-fill"></i> ${item.rating} <span class="reviews">(${item.reviews} reviews)</span></div>
+        </div>
+        <div class="price-row">
+          <span class="price">$${item.price.toFixed(2)}</span>
+          <button class="add" data-id="${item.id}">Add to Cart</button>
+        </div>
       </div>
     </article>
   `;
 }
 
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
 function renderProducts() {
   productsEl.innerHTML = trending.map(productCard).join("");
   megaProductsEl.innerHTML = items.map(productCard).join("");
+  document.querySelectorAll('.product').forEach(el => observer.observe(el));
+}
+
+function showToast(message) {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+  
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerHTML = `<i class="ri-checkbox-circle-fill"></i> ${message}`;
+  container.appendChild(toast);
+
+  setTimeout(() => toast.classList.add("show"), 100);
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
 }
 
 function getCartTotal() {
@@ -109,6 +151,7 @@ function addToCart(id) {
   const item = items.find((product) => product.id === id);
   if (!item) return;
   cart.push(item);
+  showToast(`Added ${item.name} to cart`);
   renderCart();
 }
 
@@ -119,7 +162,7 @@ function renderCart() {
       <span>${c.name}</span>
       <span>
         $${c.price.toFixed(2)}
-        <button class="item-remove" data-index="${i}">X</button>
+        <button class="item-remove" data-index="${i}"><i class="ri-delete-bin-line"></i></button>
       </span>
     </div>
   `).join("");
@@ -341,6 +384,11 @@ logoutBtn.addEventListener("click", () => {
 });
 authModal.addEventListener("click", (event) => {
   if (event.target === authModal) hideAuthModal();
+});
+togglePassword.addEventListener("click", () => {
+  const type = authPassword.getAttribute("type") === "password" ? "text" : "password";
+  authPassword.setAttribute("type", type);
+  togglePassword.innerHTML = type === "password" ? '<i class="ri-eye-line"></i>' : '<i class="ri-eye-off-line"></i>';
 });
 
 if (checkoutBtn) {

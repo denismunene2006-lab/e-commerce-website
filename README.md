@@ -11,8 +11,10 @@ This project is **not production-ready** and is intended for demonstration only.
 
 ## Features
 
-- Product listing and cart
-- User signup/login
+- Modern, responsive UI with glassmorphism effects
+- Interactive product listing with categories
+- Shopping cart with toast notifications
+- User signup/login with password visibility toggle
 - JWT auth + bcrypt
 - M-Pesa checkout (STK push, sandbox-ready)
 - Health check endpoint
