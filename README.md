@@ -70,3 +70,6 @@ npm start
 ## Notes
 
 - For real STK push, use production Daraja credentials and a public callback URL.
+
+  **Support**:
+If you like this project, consider giving it a star.
