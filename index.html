@@ -13,8 +13,9 @@
 <body>
   <div id="toast-container"></div>
   <header class="topbar">
-    <div class="logo">UrbanCart</div>
-    <nav>
+    <a href="#" class="logo"><span class="logo-mark"></span> UrbanCart</a>
+    <div id="navBackdrop" class="nav-backdrop" hidden></div>
+    <nav id="siteNav" class="site-nav" aria-label="Primary">
       <a href="#">Home</a>
       <a href="#shop">Shop</a>
       <a href="#mega-shop">Mega Shop</a>
@@ -22,11 +23,17 @@
       <a href="#deals">Deals</a>
       <a href="#about">About</a>
     </nav>
-    <div class="top-actions">
-      <span id="authStatus" class="auth-status">Guest</span>
-      <button id="authBtn" class="auth-btn">Log In</button>
-      <button id="logoutBtn" class="auth-btn hidden">Log Out</button>
-      <button id="cartBtn" class="cart-btn"><i class="ri-shopping-bag-3-line"></i> <span id="cartCount">0</span></button>
+    <div class="topbar-end">
+      <button type="button" class="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="siteNav">
+        <i class="ri-menu-line icon-menu" aria-hidden="true"></i>
+        <i class="ri-close-line icon-close" aria-hidden="true"></i>
+      </button>
+      <div class="top-actions">
+        <span id="authStatus" class="auth-status">Guest</span>
+        <button id="authBtn" class="auth-btn">Log In</button>
+        <button id="logoutBtn" class="auth-btn hidden">Log Out</button>
+        <button id="cartBtn" class="cart-btn"><i class="ri-shopping-bag-3-line"></i> <span id="cartCount">0</span></button>
+      </div>
     </div>
   </header>
 
@@ -148,8 +155,29 @@
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2026 UrbanCart. All rights reserved.</p>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-brand-row">
+          <span class="logo-mark" aria-hidden="true"></span>
+          <strong>UrbanCart</strong>
+        </div>
+        <p>Thoughtful essentials for everyday life.</p>
+      </div>
+      <div class="footer-col">
+        <span class="footer-heading">Shop</span>
+        <a href="#shop">Trending</a>
+        <a href="#mega-shop">Catalog</a>
+        <a href="#deals">Deals</a>
+      </div>
+      <div class="footer-col">
+        <span class="footer-heading">Support</span>
+        <a href="#">Shipping</a>
+        <a href="#">Returns</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <p class="footer-copy">&copy; 2026 UrbanCart. All rights reserved.</p>
   </footer>
 
   <aside id="cartDrawer" class="cart-drawer">

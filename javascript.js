@@ -406,6 +406,33 @@ if (paymentModal) {
   });
 }
 
+const menuToggle = document.querySelector(".menu-toggle");
+const siteNav = document.getElementById("siteNav");
+const navBackdrop = document.getElementById("navBackdrop");
+
+function setNavOpen(open) {
+  if (!menuToggle || !siteNav) return;
+  siteNav.classList.toggle("nav-open", open);
+  if (navBackdrop) {
+    navBackdrop.hidden = !open;
+  }
+  menuToggle.classList.toggle("nav-open", open);
+  menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+  document.body.classList.toggle("nav-locked", open);
+}
+
+if (menuToggle && siteNav) {
+  menuToggle.addEventListener("click", () => {
+    setNavOpen(!siteNav.classList.contains("nav-open"));
+  });
+  if (navBackdrop) {
+    navBackdrop.addEventListener("click", () => setNavOpen(false));
+  }
+  siteNav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setNavOpen(false));
+  });
+}
+
 setAuthMode(true);
 renderProducts();
 renderCart();
