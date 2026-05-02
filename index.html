@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UrbanCart - Modern E-Commerce</title>
+  <meta name="description" content="UrbanCart — demo e-commerce storefront with catalog, cart, account login, and M-Pesa checkout (simulated offline)." />
+  <title>UrbanCart — Demo Shop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +14,7 @@
 <body>
   <div id="toast-container"></div>
   <header class="topbar">
-    <a href="#" class="logo"><span class="logo-mark"></span> UrbanCart</a>
+    <a href="#" class="logo"><span class="logo-mark"></span> UrbanCart <span class="demo-badge" title="Demonstration purposes only">Demo</span></a>
     <div id="navBackdrop" class="nav-backdrop" hidden></div>
     <nav id="siteNav" class="site-nav" aria-label="Primary">
       <a href="#">Home</a>
@@ -70,12 +71,24 @@
     <section id="categories" class="categories">
       <h2>Shop by Category</h2>
       <div class="cat-grid">
-        <article><img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80" alt=""><h3>Fashion</h3></article>
-        <article><img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80" alt=""><h3>Electronics</h3></article>
-        <article><img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=900&q=80" alt=""><h3>Home Decor</h3></article>
-        <article><img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=80" alt=""><h3>Beauty</h3></article>
-        <article><img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80" alt=""><h3>Sports</h3></article>
-        <article><img src="https://images.unsplash.com/photo-1555529771-35a4d6a3f35b?auto=format&fit=crop&w=900&q=80" alt=""><h3>Accessories</h3></article>
+        <article class="cat-tile" data-category="Fashion" tabindex="0" role="button" aria-label="Filter catalog by Fashion">
+          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80" alt="Fashion picks"><h3>Fashion</h3>
+        </article>
+        <article class="cat-tile" data-category="Electronics" tabindex="0" role="button" aria-label="Filter catalog by Electronics">
+          <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80" alt="Gadgets"><h3>Electronics</h3>
+        </article>
+        <article class="cat-tile" data-category="Home" tabindex="0" role="button" aria-label="Filter catalog by Home">
+          <img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=900&q=80" alt="Home decor"><h3>Home Decor</h3>
+        </article>
+        <article class="cat-tile" data-category="" tabindex="0" role="button" aria-label="View full catalog">
+          <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=80" alt="Beauty"><h3>Beauty</h3>
+        </article>
+        <article class="cat-tile" data-category="" tabindex="0" role="button" aria-label="View full catalog">
+          <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=80" alt="Sports"><h3>Sports</h3>
+        </article>
+        <article class="cat-tile" data-category="" tabindex="0" role="button" aria-label="View full catalog">
+          <img src="https://images.unsplash.com/photo-1555529771-35a4d6a3f35b?auto=format&fit=crop&w=900&q=80" alt="Accessories"><h3>Accessories</h3>
+        </article>
       </div>
     </section>
 
@@ -95,7 +108,20 @@
     <section id="mega-shop" class="products-wrap mega-wrap">
       <div class="section-head">
         <h2>Mega Product Catalog</h2>
-        <p>Browse our complete collection with hundreds of products.</p>
+        <p>Browse our complete collection — search and filter categories (demo).</p>
+      </div>
+      <div class="catalog-toolbar">
+        <label class="catalog-search-wrap">
+          <i class="ri-search-line" aria-hidden="true"></i>
+          <input type="search" id="catalogSearch" placeholder="Search products by name..." autocomplete="off" aria-label="Search catalog by product name">
+        </label>
+        <div class="catalog-filters" role="group" aria-label="Filter catalog by category">
+          <button type="button" class="filter-chip is-active" data-filter="">All</button>
+          <button type="button" class="filter-chip" data-filter="Fashion">Fashion</button>
+          <button type="button" class="filter-chip" data-filter="Electronics">Electronics</button>
+          <button type="button" class="filter-chip" data-filter="Home">Home</button>
+        </div>
+        <p id="catalogCount" class="catalog-count" aria-live="polite"></p>
       </div>
       <div class="products mega-products" id="megaProducts"></div>
     </section>
@@ -145,13 +171,33 @@
       </div>
     </section>
 
-    <section class="newsletter">
+    <section id="support" class="support">
+      <h2>Help &amp; policies</h2>
+      <p class="support-lead">This is a demonstration site — answers below summarize what a typical store would communicate.</p>
+      <div class="support-grid">
+        <article id="support-shipping">
+          <h3><i class="ri-truck-line" aria-hidden="true"></i> Shipping</h3>
+          <p>Standard demo shipping: estimates shown at checkout. Most metro regions in 24–72 hours in a production build.</p>
+        </article>
+        <article id="support-returns">
+          <h3><i class="ri-loop-left-line" aria-hidden="true"></i> Returns</h3>
+          <p>Example policy: unused items returned within seven days with original packaging. Labels can be emailed after a return request.</p>
+        </article>
+        <article id="support-contact">
+          <h3><i class="ri-mail-line" aria-hidden="true"></i> Contact</h3>
+          <p>For this demo there is no live inbox — use signup/login to simulate account workflows. Embed your support email here for real launch.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="newsletter" id="newsletter">
       <h2>Get Weekly Drops</h2>
       <p>Join our list for launch alerts, member-only offers, and trend updates.</p>
-      <form class="newsletter-form">
-        <input type="email" placeholder="Enter your email" aria-label="Email" />
-        <button type="button" class="btn">Subscribe</button>
+      <form id="newsletterForm" class="newsletter-form" novalidate>
+        <input id="newsletterEmail" name="email" type="email" placeholder="Enter your email" autocomplete="email" required aria-label="Email for newsletter" />
+        <button type="submit" class="btn">Subscribe</button>
       </form>
+      <p id="newsletterHint" class="newsletter-hint" role="status" aria-live="polite"></p>
     </section>
   </main>
 
@@ -172,14 +218,15 @@
       </div>
       <div class="footer-col">
         <span class="footer-heading">Support</span>
-        <a href="#">Shipping</a>
-        <a href="#">Returns</a>
-        <a href="#">Contact</a>
+        <a href="#support-shipping">Shipping</a>
+        <a href="#support-returns">Returns</a>
+        <a href="#support-contact">Contact</a>
       </div>
     </div>
     <p class="footer-copy">&copy; 2026 UrbanCart. All rights reserved.</p>
   </footer>
 
+  <div id="cartBackdrop" class="cart-backdrop" hidden></div>
   <aside id="cartDrawer" class="cart-drawer">
     <div class="cart-head">
       <h3>Shopping Cart</h3>
@@ -196,7 +243,7 @@
     <div class="modal-card">
       <div class="modal-head">
         <h3 id="authTitle">Log In</h3>
-        <button id="closeAuthModal" class="modal-close"><i class="ri-close-line"></i></button>
+        <button type="button" id="closeAuthModal" class="modal-close"><i class="ri-close-line"></i></button>
       </div>
       <p id="authMessage" class="auth-message"></p>
       <form id="authForm" class="auth-form">
@@ -212,17 +259,24 @@
     </div>
   </div>
   <div id="paymentModal" class="modal hidden" aria-hidden="true">
-    <div class="modal-card">
+    <div class="modal-card modal-card-payment">
       <div class="modal-head">
         <h3>M-Pesa Checkout</h3>
-        <button id="closePaymentModal" class="modal-close"><i class="ri-close-line"></i></button>
+        <button type="button" id="closePaymentModal" class="modal-close"><i class="ri-close-line"></i></button>
       </div>
-      <p class="payment-receiver">Receiver: <strong>0710236087</strong></p>
+      <p class="payment-order-summary"><span id="paymentItemCount">0</span> items · amount matches your cart total (demo store).</p>
+      <p class="payment-receiver">Receiver: <strong>0710236087</strong> <span id="demoPayHint" class="payment-demo-hint hidden"></span></p>
       <p id="paymentMessage" class="auth-message"></p>
-      <form id="paymentForm" class="auth-form">
-        <input id="paymentPhone" type="tel" placeholder="Your M-Pesa number (07XXXXXXXX)" required />
-        <input id="paymentAmount" type="number" min="1" step="1" required />
-        <button type="submit" class="btn auth-submit">Initiate M-Pesa Payment</button>
+      <form id="paymentForm" class="auth-form auth-form-pay">
+        <div class="form-field">
+          <label for="paymentPhone">Your M-Pesa number</label>
+          <input id="paymentPhone" type="tel" placeholder="07XXXXXXXX" required autocomplete="tel" />
+        </div>
+        <div class="form-field">
+          <label for="paymentAmount">Amount</label>
+          <input id="paymentAmount" type="number" min="1" step="1" required />
+        </div>
+        <button type="submit" class="btn auth-submit" id="paymentSubmitBtn">Initiate payment</button>
       </form>
     </div>
   </div>

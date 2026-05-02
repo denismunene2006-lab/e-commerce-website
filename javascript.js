@@ -1,4 +1,12 @@
-const API_BASE = "http://localhost:4000/api";
+function resolveApiBase() {
+  const { hostname, protocol, port, origin } = window.location;
+  if (protocol === "file:") return "http://localhost:4000/api";
+  if ((hostname === "localhost" || hostname === "127.0.0.1") && port === "4000") return `${origin}/api`;
+  if (hostname === "localhost" || hostname === "127.0.0.1") return "http://localhost:4000/api";
+  return `${origin}/api`;
+}
+
+const API_BASE = resolveApiBase();
 const MPESA_RECEIVER = "0710236087";
 
 const categories = [
@@ -43,23 +51,28 @@ const adjectives = ["Pro", "Max", "Ultra", "Lite", "Classic", "Modern", "Sleek",
 
 const items = Array.from({ length: 72 }, (_, index) => {
   const category = categories[index % categories.length];
-  // Pick item from the new object structure ensuring name/img match
   const itemTemplate = category.items[Math.floor(index / categories.length) % category.items.length];
   const variant = adjectives[index % adjectives.length];
+  const price = 19.99 + (index % 15) * 5 + ((index * 13) % 80) / 10;
+  const rating = Math.min(4.9, 4 + (((index * 7) % 10) / 10));
+  const reviews = 20 + ((index * 31) % 480);
 
   return {
     id: index + 1,
     name: `${variant} ${itemTemplate.name}`,
     category: category.title,
-    price: 19.99 + (index % 15) * 5 + (Math.random() * 10),
+    price: Math.round(price * 100) / 100,
     img: itemTemplate.img,
-    rating: (4 + Math.random()).toFixed(1),
-    reviews: Math.floor(Math.random() * 500) + 10
+    rating: rating.toFixed(1),
+    reviews
   };
 });
 
 const trending = items.slice(0, 24);
 const cart = [];
+
+let megaCategoryFilter = "";
+let megaSearchQuery = "";
 
 const productsEl = document.getElementById("products");
 const megaProductsEl = document.getElementById("megaProducts");
@@ -67,6 +80,7 @@ const cartItemsEl = document.getElementById("cartItems");
 const cartCountEl = document.getElementById("cartCount");
 const cartTotalEl = document.getElementById("cartTotal");
 const cartDrawer = document.getElementById("cartDrawer");
+const cartBackdrop = document.getElementById("cartBackdrop");
 const authBtn = document.getElementById("authBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 const authStatus = document.getElementById("authStatus");
@@ -87,6 +101,16 @@ const paymentForm = document.getElementById("paymentForm");
 const paymentPhone = document.getElementById("paymentPhone");
 const paymentAmount = document.getElementById("paymentAmount");
 const paymentMessage = document.getElementById("paymentMessage");
+const paymentSubmitBtn = document.getElementById("paymentSubmitBtn");
+const paymentItemCount = document.getElementById("paymentItemCount");
+const demoPayHint = document.getElementById("demoPayHint");
+
+const newsletterForm = document.getElementById("newsletterForm");
+const newsletterEmail = document.getElementById("newsletterEmail");
+const newsletterHint = document.getElementById("newsletterHint");
+
+const catalogSearch = document.getElementById("catalogSearch");
+const catalogCount = document.getElementById("catalogCount");
 
 let isLoginMode = true;
 let currentUser = null;
@@ -105,7 +129,7 @@ function productCard(item) {
         </div>
         <div class="price-row">
           <span class="price">$${item.price.toFixed(2)}</span>
-          <button class="add" data-id="${item.id}">Add to Cart</button>
+          <button type="button" class="add" data-id="${item.id}">Add to Cart</button>
         </div>
       </div>
     </article>
@@ -113,34 +137,84 @@ function productCard(item) {
 }
 
 const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
+  entries.forEach((entry) => {
     if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
+      entry.target.classList.add("visible");
       observer.unobserve(entry.target);
     }
   });
-}, { threshold: 0.1 });
+}, { threshold: 0.08 });
 
-function renderProducts() {
-  productsEl.innerHTML = trending.map(productCard).join("");
-  megaProductsEl.innerHTML = items.map(productCard).join("");
-  document.querySelectorAll('.product').forEach(el => observer.observe(el));
-}
-
-function showToast(message) {
+function showToast(message, variant = "success") {
   const container = document.getElementById("toast-container");
   if (!container) return;
-  
+
   const toast = document.createElement("div");
-  toast.className = "toast";
-  toast.innerHTML = `<i class="ri-checkbox-circle-fill"></i> ${message}`;
+  toast.className = `toast toast-${variant}`;
+  const icon =
+    variant === "error"
+      ? "ri-error-warning-fill"
+      : variant === "neutral"
+      ? "ri-information-fill"
+      : "ri-checkbox-circle-fill";
+  toast.innerHTML = `<i class="${icon}" aria-hidden="true"></i> ${message}`;
   container.appendChild(toast);
 
-  setTimeout(() => toast.classList.add("show"), 100);
+  requestAnimationFrame(() => toast.classList.add("show"));
   setTimeout(() => {
     toast.classList.remove("show");
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
+    setTimeout(() => toast.remove(), 280);
+  }, 3200);
+}
+
+function megaFilteredItems() {
+  const q = megaSearchQuery.trim().toLowerCase();
+  return items.filter((item) => {
+    const catOk = !megaCategoryFilter || item.category === megaCategoryFilter;
+    const searchOk =
+      !q ||
+      item.name.toLowerCase().includes(q) ||
+      item.category.toLowerCase().includes(q);
+    return catOk && searchOk;
+  });
+}
+
+function observeProductCards(scope) {
+  scope.querySelectorAll(".product").forEach((el) => observer.observe(el));
+}
+
+function renderTrendingProducts() {
+  productsEl.innerHTML = trending.map(productCard).join("");
+  observeProductCards(productsEl);
+}
+
+function renderMegaProducts() {
+  const list = megaFilteredItems();
+  catalogCount.textContent =
+    list.length === items.length
+      ? `Showing all ${list.length} products`
+      : `Showing ${list.length} of ${items.length} products`;
+
+  if (!list.length) {
+    megaProductsEl.innerHTML = `
+      <div class="catalog-empty" role="status">
+        <i class="ri-search-eye-line" aria-hidden="true"></i>
+        <p>No products match your search or filter.</p>
+        <button type="button" class="btn btn-outline catalog-reset">Clear filters</button>
+      </div>
+    `;
+    return;
+  }
+
+  megaProductsEl.innerHTML = list.map(productCard).join("");
+  observeProductCards(megaProductsEl);
+}
+
+function setCartOpen(open) {
+  cartDrawer.classList.toggle("open", open);
+  if (cartBackdrop) {
+    cartBackdrop.hidden = !open;
+  }
 }
 
 function getCartTotal() {
@@ -156,16 +230,37 @@ function addToCart(id) {
 }
 
 function renderCart() {
-  cartCountEl.textContent = cart.length;
-  cartItemsEl.innerHTML = cart.map((c, i) => `
+  const count = cart.length;
+  cartCountEl.textContent = count;
+  checkoutBtn.disabled = count === 0;
+  checkoutBtn.classList.toggle("is-disabled", count === 0);
+
+  if (!count) {
+    cartItemsEl.innerHTML = `
+      <div class="cart-empty" role="status">
+        <i class="ri-shopping-bag-3-line" aria-hidden="true"></i>
+        <p>Your cart is empty.</p>
+        <p class="cart-empty-hint">Browse trending or the catalog, then use <strong>Add to Cart</strong>.</p>
+        <a href="#shop" class="btn btn-outline cart-empty-cta">Browse products</a>
+      </div>
+    `;
+    cartTotalEl.textContent = "0.00";
+    return;
+  }
+
+  cartItemsEl.innerHTML = cart
+    .map(
+      (c, i) => `
     <div class="cart-item">
-      <span>${c.name}</span>
-      <span>
+      <span class="cart-item-name">${c.name}</span>
+      <span class="cart-item-meta">
         $${c.price.toFixed(2)}
-        <button class="item-remove" data-index="${i}"><i class="ri-delete-bin-line"></i></button>
+        <button type="button" class="item-remove" data-index="${i}" aria-label="Remove ${c.name}"><i class="ri-delete-bin-line" aria-hidden="true"></i></button>
       </span>
     </div>
-  `).join("");
+  `
+    )
+    .join("");
   cartTotalEl.textContent = getCartTotal().toFixed(2);
 }
 
@@ -223,19 +318,38 @@ function normalizeKenyanPhoneNumber(value) {
 
 function setPaymentMessage(message, isError = false) {
   paymentMessage.textContent = message;
-  paymentMessage.style.color = isError ? "#b42318" : "#45556f";
+  paymentMessage.classList.toggle("auth-message-error", isError);
+}
+
+async function loadPaymentMeta() {
+  if (!demoPayHint) return;
+  try {
+    const res = await fetch(`${API_BASE}/meta`);
+    const data = await res.json();
+    if (data.demoPayments) {
+      demoPayHint.textContent = "(Demo: server will simulate success without live M-Pesa keys.)";
+      demoPayHint.classList.remove("hidden");
+    } else {
+      demoPayHint.textContent = "";
+      demoPayHint.classList.add("hidden");
+    }
+  } catch (_e) {
+    demoPayHint.textContent = "(Start API on :4000 for checkout.)";
+    demoPayHint.classList.remove("hidden");
+  }
 }
 
 function showPaymentModal() {
   if (!cart.length) {
-    setPaymentMessage("Add at least one product to the cart before payment.", true);
-    cartDrawer.classList.add("open");
+    showToast("Your cart is empty — add something first.", "error");
     return;
   }
 
   paymentAmount.value = Math.max(1, Math.round(getCartTotal()));
   paymentPhone.value = "";
-  setPaymentMessage(`You will receive an STK prompt. Payment destination is ${MPESA_RECEIVER}.`);
+  paymentItemCount.textContent = String(cart.length);
+  setPaymentMessage(`You’ll pay to ${MPESA_RECEIVER}. Use a valid Safaricom number for STK in live mode.`);
+  loadPaymentMeta();
 
   paymentModal.classList.remove("hidden");
   paymentModal.setAttribute("aria-hidden", "false");
@@ -258,7 +372,7 @@ async function apiRequest(path, method = "GET", body = null, token = null) {
       body: body ? JSON.stringify(body) : null
     });
   } catch (_error) {
-    throw new Error("Cannot reach auth server. Start backend on http://localhost:4000.");
+    throw new Error("Cannot reach API. Run the server: npm start (http://localhost:4000).");
   }
 
   const data = await response.json().catch(() => ({}));
@@ -296,18 +410,38 @@ async function initiateMpesaPayment(event) {
     return;
   }
 
+  paymentSubmitBtn.disabled = true;
+  setPaymentMessage("Processing…");
+
   try {
-    setPaymentMessage("Sending M-Pesa prompt...");
-    const result = await apiRequest("/payments/mpesa", "POST", {
-      phoneNumber: normalizedPhone,
-      amount,
-      cartItems: cart.length
-    }, getToken());
+    const result = await apiRequest(
+      "/payments/mpesa",
+      "POST",
+      {
+        phoneNumber: normalizedPhone,
+        amount,
+        cartItems: cart.length
+      },
+      getToken()
+    );
 
     const checkoutId = result.checkoutRequestId ? ` Ref: ${result.checkoutRequestId}` : "";
-    setPaymentMessage(`${result.message || "M-Pesa prompt sent. Check your phone."}${checkoutId}`);
+    setPaymentMessage(`${result.message || "Request completed."}${checkoutId}`);
+
+    if (result.demo) {
+      showToast("Demo checkout complete — cart cleared.", "neutral");
+      cart.length = 0;
+      renderCart();
+      setCartOpen(false);
+      setTimeout(() => hidePaymentModal(), 1600);
+    } else {
+      showToast("STK push sent — complete payment on your phone.", "success");
+    }
   } catch (error) {
     setPaymentMessage(error.message || "Payment initiation failed.", true);
+    showToast(error.message || "Payment failed", "error");
+  } finally {
+    paymentSubmitBtn.disabled = false;
   }
 }
 
@@ -328,15 +462,14 @@ async function handleAuthSubmit(event) {
   }
 
   try {
-    authMessage.textContent = "Please wait...";
-    const result = isLoginMode
-      ? await login(email, password)
-      : await register(name, email, password);
+    authMessage.textContent = "Please wait…";
+    const result = isLoginMode ? await login(email, password) : await register(name, email, password);
 
     setToken(result.token);
     setAuthUI(result.user);
     authForm.reset();
     hideAuthModal();
+    showToast(isLoginMode ? "Welcome back." : "Account created.");
   } catch (error) {
     authMessage.textContent = error.message;
   }
@@ -358,6 +491,17 @@ async function loadCurrentUser() {
   }
 }
 
+function setMegaFilterButtons() {
+  document.querySelectorAll(".filter-chip").forEach((btn) => {
+    const v = btn.getAttribute("data-filter") || "";
+    btn.classList.toggle("is-active", v === megaCategoryFilter);
+  });
+}
+
+function scrollToMega() {
+  document.getElementById("mega-shop")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 document.addEventListener("click", (event) => {
   const addButton = event.target.closest(".add");
   if (addButton) {
@@ -369,11 +513,25 @@ document.addEventListener("click", (event) => {
   if (removeButton) {
     cart.splice(Number(removeButton.dataset.index), 1);
     renderCart();
+    return;
+  }
+
+  const resetBtn = event.target.closest(".catalog-reset");
+  if (resetBtn) {
+    megaCategoryFilter = "";
+    megaSearchQuery = "";
+    if (catalogSearch) catalogSearch.value = "";
+    setMegaFilterButtons();
+    renderMegaProducts();
   }
 });
 
-document.getElementById("cartBtn").addEventListener("click", () => cartDrawer.classList.add("open"));
-document.getElementById("closeCart").addEventListener("click", () => cartDrawer.classList.remove("open"));
+document.getElementById("cartBtn").addEventListener("click", () => setCartOpen(true));
+document.getElementById("closeCart").addEventListener("click", () => setCartOpen(false));
+if (cartBackdrop) {
+  cartBackdrop.addEventListener("click", () => setCartOpen(false));
+}
+
 authBtn.addEventListener("click", showAuthModal);
 closeAuthModal.addEventListener("click", hideAuthModal);
 toggleAuthMode.addEventListener("click", () => setAuthMode(!isLoginMode));
@@ -381,6 +539,7 @@ authForm.addEventListener("submit", handleAuthSubmit);
 logoutBtn.addEventListener("click", () => {
   clearToken();
   setAuthUI(null);
+  showToast("Signed out.", "neutral");
 });
 authModal.addEventListener("click", (event) => {
   if (event.target === authModal) hideAuthModal();
@@ -403,6 +562,57 @@ if (paymentForm) {
 if (paymentModal) {
   paymentModal.addEventListener("click", (event) => {
     if (event.target === paymentModal) hidePaymentModal();
+  });
+}
+
+if (catalogSearch) {
+  catalogSearch.addEventListener("input", () => {
+    megaSearchQuery = catalogSearch.value;
+    renderMegaProducts();
+  });
+}
+
+document.querySelectorAll(".filter-chip").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    megaCategoryFilter = btn.getAttribute("data-filter") || "";
+    setMegaFilterButtons();
+    renderMegaProducts();
+  });
+});
+
+document.querySelectorAll(".cat-tile").forEach((tile) => {
+  const go = () => {
+    const cat = tile.getAttribute("data-category") || "";
+    megaCategoryFilter = cat;
+    if (catalogSearch) catalogSearch.value = "";
+    megaSearchQuery = "";
+    setMegaFilterButtons();
+    renderMegaProducts();
+    scrollToMega();
+    if (!cat) {
+      showToast("Showing the full catalog.", "neutral");
+    }
+  };
+  tile.addEventListener("click", go);
+  tile.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      go();
+    }
+  });
+});
+
+if (newsletterForm && newsletterEmail && newsletterHint) {
+  newsletterForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = newsletterEmail.value.trim();
+    if (!email || !newsletterEmail.checkValidity()) {
+      newsletterHint.textContent = "Enter a valid email address.";
+      return;
+    }
+    newsletterHint.textContent = "Thanks — you’re on the list (demo; no email was sent).";
+    showToast("Subscribed (demo).", "neutral");
+    newsletterEmail.value = "";
   });
 }
 
@@ -433,7 +643,16 @@ if (menuToggle && siteNav) {
   });
 }
 
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  setNavOpen(false);
+  setCartOpen(false);
+  hideAuthModal();
+  hidePaymentModal();
+});
+
 setAuthMode(true);
-renderProducts();
+renderTrendingProducts();
+renderMegaProducts();
 renderCart();
 loadCurrentUser();

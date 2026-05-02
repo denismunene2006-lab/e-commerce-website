@@ -11,6 +11,8 @@ const https = require("https");
 const app = express();
 const PORT = process.env.PORT || 4000;
 const JWT_SECRET = process.env.JWT_SECRET || "change-me-in-production";
+/** Simulate successful checkout when Mpesa secrets are unset (ideal for demos). Set MPESA_DISABLE_DEMO_STUB=true to require real credentials. */
+const MPESA_DEMO_STUB = process.env.MPESA_DISABLE_DEMO_STUB !== "true";
 
 const USERS_FILE = path.join(__dirname, "data", "users.json");
 const TRANSACTIONS_FILE = path.join(__dirname, "data", "mpesa-transactions.json");
@@ -228,6 +230,14 @@ app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
 });
 
+app.get("/api/meta", (_req, res) => {
+  const missing = getMissingMpesaConfig();
+  res.json({
+    mpesaConfigured: missing.length === 0,
+    demoPayments: missing.length > 0 && MPESA_DEMO_STUB
+  });
+});
+
 app.post("/api/register", async (req, res) => {
   const name = String(req.body.name || "").trim();
   const email = String(req.body.email || "").trim().toLowerCase();
@@ -302,13 +312,6 @@ app.get("/api/me", authMiddleware, (req, res) => {
 });
 
 app.post("/api/payments/mpesa", async (req, res) => {
-  const missing = getMissingMpesaConfig();
-  if (missing.length) {
-    return res.status(500).json({
-      message: `M-Pesa configuration is incomplete: ${missing.join(", ")}`
-    });
-  }
-
   const phoneNumber = formatKenyanPhoneNumber(req.body.phoneNumber);
   const amount = Math.round(Number(req.body.amount));
 
@@ -318,6 +321,44 @@ app.post("/api/payments/mpesa", async (req, res) => {
 
   if (!Number.isFinite(amount) || amount < 1) {
     return res.status(400).json({ message: "Amount must be at least 1." });
+  }
+
+  const missing = getMissingMpesaConfig();
+  if (missing.length) {
+    if (!MPESA_DEMO_STUB) {
+      return res.status(500).json({
+        message: `M-Pesa configuration is incomplete: ${missing.join(", ")}`
+      });
+    }
+
+    const accountReference = `URBANCART-DEMO-${Date.now()}`;
+    const checkoutRequestId = `DEMO_CO_${Date.now()}`;
+    const merchantRequestId = `DEMO_MR_${Date.now()}`;
+    const transactions = readTransactions();
+    transactions.push({
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      createdAt: new Date().toISOString(),
+      amount,
+      payerPhone: phoneNumber,
+      receiverPhone: MPESA_RECEIVER_MSISDN,
+      checkoutRequestId,
+      merchantRequestId,
+      responseCode: "0",
+      responseDescription: "Demo simulation — no SMS sent.",
+      customerMessage: "Checkout simulated for local demo.",
+      status: "DEMO_COMPLETED",
+      demo: true
+    });
+    writeTransactions(transactions);
+
+    return res.json({
+      message:
+        "Demo checkout successful (no keys configured — no real M-Pesa prompt). In production, set Mpesa credentials in .env.",
+      checkoutRequestId,
+      merchantRequestId,
+      receiverPhone: MPESA_RECEIVER_MSISDN,
+      demo: true
+    });
   }
 
   try {
@@ -393,6 +434,8 @@ app.post("/api/payments/mpesa/callback", (req, res) => {
   return res.json({ ResultCode: 0, ResultDesc: "Accepted" });
 });
 
+app.use(express.static(path.join(__dirname)));
+
 app.use((err, _req, res, _next) => {
   console.error(err);
   res.status(500).json({ message: "Internal server error." });
@@ -401,4 +444,9 @@ app.use((err, _req, res, _next) => {
 app.listen(PORT, () => {
   ensureDataFiles();
   console.log(`UrbanCart API running on http://localhost:${PORT}`);
+  if (getMissingMpesaConfig().length && MPESA_DEMO_STUB) {
+    console.log(
+      "[UrbanCart] M-Pesa env vars incomplete — POST /api/payments/mpesa uses demo simulation (no real STK push)."
+    );
+  }
 });
