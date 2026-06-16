@@ -1,10 +1,10 @@
-# UrbanCart
+# UrbanCart🛒
 
 UrbanCart is a **demo** e-commerce site: a vanilla HTML/CSS/JS storefront with a Node.js/Express API. It covers browsing, search and category filters, cart, JWT auth (signup/login), and M-Pesa–style checkout (Safaricom Daraja when configured, otherwise a **built-in simulation** for local demos).
 
 This project is **not production-ready** and is intended for learning and portfolios only.
 
-## Demo link (static preview)
+## Demo link (static preview)🔗
 
 GitHub Pages hosts the frontend only:
 
@@ -104,4 +104,4 @@ You can still open `index.html` via another static server, but API calls default
 
 ---
 
-If you find this demo useful, consider starring the repo.
+If you find this demo useful, consider starring the repo⭐🌟.
