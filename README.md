@@ -20,7 +20,7 @@ For cart, signup, payments, and the catalog API together, **run the server local
 
 - Responsive UI (hero, categories, trending + mega catalog, support section, newsletter)
 - Catalog search and category chips; category tiles scroll to filtered catalog
-- Shopping cart with empty state, overlay backdrop, toast feedback
+- Shopping cart with quantity controls (+/−), empty state, overlay backdrop, and toast feedback
 - User signup/login (bcrypt + JWT); optional Bearer token used when present
 - M-Pesa: real STK push when Daraja env vars are set; **demo simulation** when they are missing (see below)
 - `GET /api/health`, `GET /api/meta`, static site + API on one port when you use `npm start`

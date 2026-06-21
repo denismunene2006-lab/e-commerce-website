@@ -218,13 +218,18 @@ function setCartOpen(open) {
 }
 
 function getCartTotal() {
-  return cart.reduce((sum, item) => sum + item.price, 0);
+  return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 }
 
 function addToCart(id) {
   const item = items.find((product) => product.id === id);
   if (!item) return;
-  cart.push(item);
+  const existing = cart.find((entry) => entry.id === id);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({ ...item, quantity: 1 });
+  }
   showToast(`Added ${item.name} to cart`);
   renderCart();
 }
@@ -253,10 +258,15 @@ function renderCart() {
       (c, i) => `
     <div class="cart-item">
       <span class="cart-item-name">${c.name}</span>
-      <span class="cart-item-meta">
-        $${c.price.toFixed(2)}
+      <div class="cart-item-meta">
+        <span class="cart-item-qty">
+          <button type="button" class="qty-btn" data-action="dec" data-index="${i}" aria-label="Decrease quantity for ${c.name}">−</button>
+          <span class="qty-value">${c.quantity}</span>
+          <button type="button" class="qty-btn" data-action="inc" data-index="${i}" aria-label="Increase quantity for ${c.name}">+</button>
+        </span>
+        <span>$${(c.price * c.quantity).toFixed(2)}</span>
         <button type="button" class="item-remove" data-index="${i}" aria-label="Remove ${c.name}"><i class="ri-delete-bin-line" aria-hidden="true"></i></button>
-      </span>
+      </div>
     </div>
   `
     )
@@ -512,6 +522,24 @@ document.addEventListener("click", (event) => {
   const removeButton = event.target.closest(".item-remove");
   if (removeButton) {
     cart.splice(Number(removeButton.dataset.index), 1);
+    renderCart();
+    return;
+  }
+
+  const qtyButton = event.target.closest(".qty-btn");
+  if (qtyButton) {
+    const index = Number(qtyButton.dataset.index);
+    const action = qtyButton.dataset.action;
+    const item = cart[index];
+    if (!item) return;
+    if (action === "inc") {
+      item.quantity += 1;
+    } else if (action === "dec") {
+      item.quantity -= 1;
+      if (item.quantity <= 0) {
+        cart.splice(index, 1);
+      }
+    }
     renderCart();
     return;
   }
