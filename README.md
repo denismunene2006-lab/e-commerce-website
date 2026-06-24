@@ -2,7 +2,7 @@
 
 **UrbanCart** is a full-stack e-commerce demo application built with vanilla HTML, CSS, and JavaScript on the frontend, backed by a Node.js/Express REST API. It showcases core e-commerce functionality — product browsing, search & category filtering, cart management, JWT-based authentication, and M-Pesa payment integration (live Daraja STK push **or** built-in simulation for local demos).
 
-> ⚠️ This project is **not production-ready**. It is intended for **learning, experimentation, and portfolio展示**.
+> ⚠️ This project is **not production-ready**. It is intended for **learning, experimentation, and portfolio**.
 
 ---
 
