@@ -1,6 +1,7 @@
 :root {
   --bg: #f4f6fa;
   --bg-elevated: #ffffff;
+  --bg-glass: rgba(244, 246, 250, 0.72);
   --ink: #0c1222;
   --muted: #5c6678;
   --muted-soft: #8b95a8;
@@ -8,8 +9,13 @@
   --accent-hover: #d14d2eff;
   --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
   --accent-dark: #101828;
+  --accent-badge-text: #9a3412;
+  --bg-product-img: #e2e8f0;
   --line: rgba(15, 23, 42, 0.08);
   --line-strong: rgba(15, 23, 42, 0.12);
+  --bg-gradient-1: rgba(232, 93, 59, 0.12);
+  --bg-gradient-2: rgba(56, 189, 248, 0.1);
+  --bg-gradient-3: rgba(99, 102, 241, 0.06);
   --radius-sm: 10px;
   --radius: 18px;
   --radius-lg: 24px;
@@ -19,6 +25,42 @@
   --blur: saturate(160%) blur(18px);
   --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="dark"] {
+  --bg: #090d16;
+  --bg-elevated: #111827;
+  --bg-glass: rgba(9, 13, 22, 0.72);
+  --ink: #f3f4f6;
+  --muted: #9ca3af;
+  --muted-soft: #6b7280;
+  --accent: #ff7c5c;
+  --accent-hover: #ff977d;
+  --accent-soft: rgba(255, 124, 92, 0.15);
+  --accent-dark: #f97316;
+  --accent-badge-text: #ffedd5;
+  --bg-product-img: #1f2937;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.15);
+  --bg-gradient-1: rgba(232, 93, 59, 0.18);
+  --bg-gradient-2: rgba(56, 189, 248, 0.06);
+  --bg-gradient-3: rgba(99, 102, 241, 0.08);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+/* Smooth transition when changing theme */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: background-color 0.4s var(--ease-out),
+              color 0.4s var(--ease-out),
+              border-color 0.4s var(--ease-out),
+              box-shadow 0.4s var(--ease-out),
+              background-image 0.4s var(--ease-out) !important;
+  transition-delay: 0s !important;
 }
 
 *,
@@ -34,9 +76,9 @@ body {
   color: var(--ink);
   background-color: var(--bg);
   background-image:
-    radial-gradient(ellipse 90% 60% at 8% -10%, rgba(232, 93, 59, 0.12), transparent),
-    radial-gradient(ellipse 70% 50% at 95% 5%, rgba(56, 189, 248, 0.1), transparent),
-    radial-gradient(ellipse 50% 40% at 50% 100%, rgba(99, 102, 241, 0.06), transparent);
+    radial-gradient(ellipse 90% 60% at 8% -10%, var(--bg-gradient-1), transparent),
+    radial-gradient(ellipse 70% 50% at 95% 5%, var(--bg-gradient-2), transparent),
+    radial-gradient(ellipse 50% 40% at 50% 100%, var(--bg-gradient-3), transparent);
   background-attachment: fixed;
   line-height: 1.5;
 }
@@ -86,7 +128,7 @@ section {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(244, 246, 250, 0.72);
+  background: var(--bg-glass);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
   border-bottom: 1px solid var(--line);
@@ -109,7 +151,54 @@ section {
   border-radius: 999px;
   background: var(--accent-soft);
   border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
-  color: #9a3412;
+  color: var(--accent-badge-text);
+}
+
+.theme-btn {
+  border: 1px solid var(--line);
+  background: var(--bg-elevated);
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s var(--ease-out), border-color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
+  color: var(--ink);
+  font-size: 1.15rem;
+}
+
+.theme-btn:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+.theme-btn i {
+  transition: transform 0.3s var(--ease-out);
+}
+
+.theme-btn:hover i {
+  transform: rotate(20deg) scale(1.1);
+}
+
+.theme-btn .icon-sun {
+  display: none;
+}
+
+.theme-btn .icon-moon {
+  display: block;
+}
+
+[data-theme="dark"] .theme-btn .icon-sun {
+  display: block;
+}
+
+[data-theme="dark"] .theme-btn .icon-moon {
+  display: none;
 }
 
 .logo {
@@ -148,7 +237,7 @@ section {
 
 .site-nav a:hover {
   color: var(--ink);
-  background: rgba(15, 23, 42, 0.05);
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
 }
 
 .menu-toggle {
@@ -215,6 +304,7 @@ section {
 .cart-btn {
   border: 1px solid var(--line);
   background: var(--bg-elevated);
+  color: var(--ink);
   padding: 10px 16px;
   border-radius: 999px;
   cursor: pointer;
@@ -264,7 +354,7 @@ section {
   border-radius: 999px;
   background: var(--accent-soft);
   border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
-  color: #9a3412;
+  color: var(--accent-badge-text);
   font-weight: 600;
   font-size: 0.8125rem;
   letter-spacing: 0.04em;
@@ -365,7 +455,7 @@ section {
   overflow: hidden;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.65);
+  background: color-mix(in srgb, var(--bg-elevated) 65%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
@@ -480,7 +570,7 @@ section {
 .product-img-wrap {
   position: relative;
   overflow: hidden;
-  background: #f1f5f9;
+  background: var(--bg-product-img);
 }
 
 .product-img-wrap img {
@@ -634,7 +724,7 @@ section {
   padding: 0 14px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: rgba(248, 250, 252, 0.9);
+  background: color-mix(in srgb, var(--bg-elevated) 90%, transparent);
   min-height: 46px;
 }
 
@@ -662,7 +752,7 @@ section {
 
 .filter-chip {
   border: 1px solid var(--line);
-  background: rgba(248, 250, 252, 0.8);
+  background: color-mix(in srgb, var(--bg-elevated) 80%, transparent);
   padding: 8px 16px;
   border-radius: 999px;
   font-family: inherit;
@@ -681,7 +771,7 @@ section {
 .filter-chip.is-active {
   background: var(--accent-soft);
   border-color: color-mix(in srgb, var(--accent) 35%, transparent);
-  color: #9a3412;
+  color: var(--accent-badge-text);
 }
 
 .catalog-count {
@@ -706,7 +796,7 @@ section {
   padding: clamp(36px, 6vw, 52px) 20px;
   border-radius: var(--radius);
   border: 1px dashed var(--line-strong);
-  background: rgba(248, 250, 252, 0.6);
+  background: color-mix(in srgb, var(--bg-elevated) 60%, transparent);
   color: var(--muted);
 }
 
@@ -965,7 +1055,7 @@ section {
   border-top: 1px solid var(--line);
   margin-top: 16px;
   padding: clamp(40px, 6vw, 56px) 4% 24px;
-  background: rgba(255, 255, 255, 0.4);
+  background: color-mix(in srgb, var(--bg-elevated) 40%, transparent);
 }
 
 .footer-inner {
@@ -1041,11 +1131,11 @@ section {
   height: 100vh;
   height: 100dvh;
   width: min(392px, 92vw);
-  background: rgba(255, 255, 255, 0.96);
+  background: color-mix(in srgb, var(--bg-elevated) 96%, transparent);
   backdrop-filter: var(--blur);
   -webkit-backdrop-filter: var(--blur);
   border-left: 1px solid var(--line);
-  box-shadow: -12px 0 48px rgba(15, 23, 42, 0.12);
+  box-shadow: -12px 0 48px rgba(0, 0, 0, 0.2);
   transition: right 0.38s var(--ease-out);
   z-index: 60;
   display: flex;
@@ -1080,7 +1170,8 @@ section {
 .cart-head button,
 .icon-btn {
   border: none;
-  background: rgba(15, 23, 42, 0.06);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  color: var(--ink);
   width: 40px;
   height: 40px;
   border-radius: 12px;
@@ -1094,7 +1185,7 @@ section {
 
 .cart-head button:hover,
 .icon-btn:hover {
-  background: rgba(15, 23, 42, 0.1);
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
 }
 
 .cart-items {
@@ -1113,7 +1204,7 @@ section {
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  background: rgba(248, 250, 252, 0.8);
+  background: color-mix(in srgb, var(--bg-elevated) 80%, transparent);
   font-size: 0.9375rem;
 }
 
@@ -1144,7 +1235,7 @@ section {
   width: 28px;
   height: 28px;
   border: 1px solid var(--line);
-  background: rgba(248, 250, 252, 0.9);
+  background: var(--bg-elevated);
   border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
@@ -1157,7 +1248,7 @@ section {
 }
 
 .qty-btn:hover {
-  background: rgba(15, 23, 42, 0.06);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
   border-color: var(--line-strong);
 }
 
@@ -1271,7 +1362,7 @@ section {
 
 .modal-card {
   width: min(440px, 100%);
-  background: rgba(255, 255, 255, 0.98);
+  background: color-mix(in srgb, var(--bg-elevated) 98%, transparent);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: clamp(22px, 4vw, 26px);
@@ -1295,7 +1386,8 @@ section {
 
 .modal-close {
   border: none;
-  background: rgba(15, 23, 42, 0.06);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  color: var(--ink);
   width: 40px;
   height: 40px;
   border-radius: 12px;
@@ -1307,7 +1399,7 @@ section {
 }
 
 .modal-close:hover {
-  background: rgba(15, 23, 42, 0.1);
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
 }
 
 .auth-message {
@@ -1329,7 +1421,7 @@ section {
   width: 100%;
   font-family: inherit;
   font-size: 0.9375rem;
-  background: rgba(248, 250, 252, 0.8);
+  background: color-mix(in srgb, var(--bg-elevated) 80%, transparent);
   transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
 }
 
@@ -1361,7 +1453,7 @@ section {
 }
 
 .password-toggle:hover {
-  background: rgba(15, 23, 42, 0.06);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
   color: var(--ink);
 }
 
@@ -1449,7 +1541,7 @@ section {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.95);
+  background: color-mix(in srgb, var(--bg-elevated) 95%, transparent);
   border: 1px solid var(--line);
   box-shadow: var(--shadow-lg);
   transform: translateY(120%);
@@ -1517,7 +1609,7 @@ section {
     align-items: stretch;
     gap: 4px;
     padding: 12px;
-    background: rgba(255, 255, 255, 0.95);
+    background: color-mix(in srgb, var(--bg-elevated) 95%, transparent);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     box-shadow: var(--shadow-lg);
@@ -1615,4 +1707,12 @@ section {
   .product:hover .product-img-wrap img {
     transform: none;
   }
+}
+
+/* Dark theme specific overrides for premium visuals */
+[data-theme="dark"] .banner {
+  background:
+    linear-gradient(135deg, rgba(21, 28, 44, 0.6), rgba(21, 28, 44, 0.3)),
+    linear-gradient(120deg, #1e1b4b, #311042, #0b0f19);
+  border-color: var(--line);
 }

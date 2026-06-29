@@ -679,6 +679,27 @@ document.addEventListener("keydown", (e) => {
   hidePaymentModal();
 });
 
+// Theme toggle logic
+const themeToggle = document.getElementById("themeToggle");
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    
+    // Add transition helper class
+    document.documentElement.classList.add("theme-transitioning");
+    
+    // Update theme attribute
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("urbancart_theme", newTheme);
+    
+    // Remove helper class after transition finishes (400ms)
+    setTimeout(() => {
+      document.documentElement.classList.remove("theme-transitioning");
+    }, 400);
+  });
+}
+
 setAuthMode(true);
 renderTrendingProducts();
 renderMegaProducts();

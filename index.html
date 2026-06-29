@@ -10,6 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <script>
+    (function() {
+      const theme = localStorage.getItem("urbancart_theme") || "light";
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
 </head>
 <body>
   <div id="toast-container"></div>
@@ -33,6 +39,10 @@
         <span id="authStatus" class="auth-status">Guest</span>
         <button id="authBtn" class="auth-btn">Log In</button>
         <button id="logoutBtn" class="auth-btn hidden">Log Out</button>
+        <button type="button" id="themeToggle" class="theme-btn" aria-label="Toggle dark/light theme">
+          <i class="ri-sun-line icon-sun" aria-hidden="true"></i>
+          <i class="ri-moon-line icon-moon" aria-hidden="true"></i>
+        </button>
         <button id="cartBtn" class="cart-btn"><i class="ri-shopping-bag-3-line"></i> <span id="cartCount">0</span></button>
       </div>
     </div>
