@@ -96,6 +96,7 @@ function saveCart() {
 
 let megaCategoryFilter = "";
 let megaSearchQuery = "";
+let megaSortBy = "default";
 
 const productsEl = document.getElementById("products");
 const megaProductsEl = document.getElementById("megaProducts");
@@ -134,6 +135,7 @@ const newsletterHint = document.getElementById("newsletterHint");
 
 const catalogSearch = document.getElementById("catalogSearch");
 const catalogCount = document.getElementById("catalogCount");
+const catalogSort = document.getElementById("catalogSort");
 
 let isLoginMode = true;
 let currentUser = null;
@@ -200,6 +202,27 @@ function megaFilteredItems() {
       item.category.toLowerCase().includes(q);
     return catOk && searchOk;
   });
+}
+
+function sortCatalogItems(list) {
+  const sorted = [...list];
+  switch (megaSortBy) {
+    case "name-asc":
+      sorted.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case "price-asc":
+      sorted.sort((a, b) => a.price - b.price);
+      break;
+    case "price-desc":
+      sorted.sort((a, b) => b.price - a.price);
+      break;
+    case "rating-desc":
+      sorted.sort((a, b) => Number(b.rating) - Number(a.rating));
+      break;
+    default:
+      sorted.sort((a, b) => a.id - b.id);
+  }
+  return sorted;
 }
 
 function observeProductCards(scope) {
@@ -455,7 +478,13 @@ async function initiateMpesaPayment(event) {
       {
         phoneNumber: normalizedPhone,
         amount,
-        cartItems: cart.length
+        items: cart.map(({ id, name, price, quantity, category }) => ({
+          id,
+          name,
+          price,
+          quantity,
+          category
+        }))
       },
       getToken()
     );
