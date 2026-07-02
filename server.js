@@ -347,7 +347,8 @@ app.post("/api/payments/mpesa", async (req, res) => {
       responseDescription: "Demo simulation — no SMS sent.",
       customerMessage: "Checkout simulated for local demo.",
       status: "DEMO_COMPLETED",
-      demo: true
+      demo: true,
+      items: req.body.items || []
     });
     writeTransactions(transactions);
 
@@ -384,7 +385,8 @@ app.post("/api/payments/mpesa", async (req, res) => {
       responseCode: stkResponse.ResponseCode || null,
       responseDescription: stkResponse.ResponseDescription || null,
       customerMessage: stkResponse.CustomerMessage || null,
-      status: "PENDING"
+      status: "PENDING",
+      items: req.body.items || []
     });
     writeTransactions(transactions);
 

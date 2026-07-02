@@ -39,6 +39,9 @@
         <span id="authStatus" class="auth-status">Guest</span>
         <button id="authBtn" class="auth-btn">Log In</button>
         <button id="logoutBtn" class="auth-btn hidden">Log Out</button>
+        <button type="button" id="dashboardBtn" class="dashboard-btn" aria-label="View orders and profile">
+          <i class="ri-user-line" aria-hidden="true"></i> <span class="btn-text">Dashboard</span>
+        </button>
         <button type="button" id="themeToggle" class="theme-btn" aria-label="Toggle dark/light theme">
           <i class="ri-sun-line icon-sun" aria-hidden="true"></i>
           <i class="ri-moon-line icon-moon" aria-hidden="true"></i>
@@ -288,6 +291,44 @@
         </div>
         <button type="submit" class="btn auth-submit" id="paymentSubmitBtn">Initiate payment</button>
       </form>
+    </div>
+  </div>
+
+  <div id="dashboardModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-card modal-card-dashboard">
+      <div class="modal-head">
+        <h3>User Dashboard</h3>
+        <button type="button" id="closeDashboardModal" class="modal-close" aria-label="Close dashboard"><i class="ri-close-line"></i></button>
+      </div>
+      <div class="dashboard-profile-section">
+        <div class="profile-avatar"><i class="ri-user-line"></i></div>
+        <div class="profile-info">
+          <h4 id="profileName">Guest User</h4>
+          <p id="profileEmail">guest@urbancart.demo</p>
+          <span id="profileStatusBadge" class="profile-status-badge">Guest Session</span>
+        </div>
+      </div>
+      <div class="dashboard-orders-section">
+        <h4>Order &amp; Transaction History</h4>
+        <div id="ordersList" class="orders-list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="receiptModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-card modal-card-receipt">
+      <div class="modal-head">
+        <h3>Transaction Receipt</h3>
+        <button type="button" id="closeReceiptModal" class="modal-close" aria-label="Close receipt"><i class="ri-close-line"></i></button>
+      </div>
+      <div class="receipt-body" id="receiptContent">
+        <!-- Dynamically populated -->
+      </div>
+      <div class="receipt-actions">
+        <button type="button" class="btn btn-outline print-btn" id="printReceiptBtn"><i class="ri-printer-line"></i> Print Receipt</button>
+      </div>
     </div>
   </div>
 
