@@ -177,7 +177,7 @@ This is a personal demo project, but contributions, suggestions, and bug reports
 
 ## ⭐ Support
 
-If you find this project useful or interesting, please **star** the repo on GitHub — it helps a lot!
+If you find this project useful or interesting, please **star** the repo on GitHub — it helps a lot!🎖️
 
 [⭐ Star on GitHub](https://github.com/denismunene2006-lab/e-commerce-website)
 
