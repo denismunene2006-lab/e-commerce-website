@@ -25,6 +25,7 @@
   --blur: saturate(160%) blur(18px);
   --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --topbar-offset: 84px;
 }
 
 [data-theme="dark"] {
@@ -131,8 +132,8 @@ section {
 }
 
 .topbar {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  inset: 0 0 auto 0;
   z-index: 50;
   background: var(--bg-glass);
   backdrop-filter: var(--blur);
@@ -143,6 +144,10 @@ section {
   justify-content: space-between;
   gap: 16px;
   padding: 12px 4%;
+}
+
+main {
+  padding-top: calc(var(--topbar-offset) + env(safe-area-inset-top, 0));
 }
 
 .demo-badge {
@@ -1627,6 +1632,10 @@ section {
 }
 
 @media (max-width: 980px) {
+  :root {
+    --topbar-offset: 128px;
+  }
+
   .hero {
     grid-template-columns: 1fr;
   }
@@ -1656,7 +1665,7 @@ section {
 
   .site-nav {
     position: fixed;
-    top: calc(72px + env(safe-area-inset-top, 0));
+    top: calc(var(--topbar-offset) + env(safe-area-inset-top, 0));
     left: 4%;
     right: 4%;
     flex-direction: column;
@@ -1728,6 +1737,10 @@ section {
 }
 
 @media (max-width: 520px) {
+  :root {
+    --topbar-offset: 140px;
+  }
+
   .topbar {
     gap: 10px;
   }
