@@ -24,6 +24,12 @@ The frontend is hosted on **GitHub Pages**:
 - **Shopping Cart** — Add/remove items, quantity controls (+/−), empty state, overlay backdrop, toast notifications
 - **Auth UI** — Signup and login modals; Bearer token stored in memory and sent on authenticated requests
 
+### Recent UI Fixes
+- **Fixed Header** — The top navigation now stays visible while scrolling through the page
+- **Mobile Nav Lock** — Opening the hamburger menu locks the page behind it and keeps the menu pinned in place
+- **Small Phone Overflow** — Horizontal scrolling on narrow screens was reduced by tightening mobile layout rules
+- **Category Image Update** — The Accessories category tile now uses a visible fallback image
+
 ### Backend API (Node.js/Express)
 - **User Management** — Signup with bcrypt password hashing, login returning a JWT, protected `/api/me` endpoint
 - **Payments** — M-Pesa STK push via Safaricom Daraja API when credentials are configured; **demo simulation** when they are not (see [M-Pesa Demo Simulation](#-m-pesa-demo-simulation))
