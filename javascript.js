@@ -235,7 +235,7 @@ function renderTrendingProducts() {
 }
 
 function renderMegaProducts() {
-  const list = megaFilteredItems();
+  const list = sortCatalogItems(megaFilteredItems());
   catalogCount.textContent =
     list.length === items.length
       ? `Showing all ${list.length} products`
@@ -418,6 +418,164 @@ function hidePaymentModal() {
   paymentModal.setAttribute("aria-hidden", "true");
 }
 
+// Local Storage Order Management
+function saveOrderToLocalStorage(result, amount, phone) {
+  const savedOrders = JSON.parse(localStorage.getItem("urbancart_orders") || "[]");
+  const newOrder = {
+    id: result.checkoutRequestId || `DEMO_CO_${Date.now()}`,
+    date: new Date().toISOString(),
+    amount: amount,
+    payerPhone: phone,
+    status: result.demo ? "COMPLETED" : "PENDING",
+    items: [...cart], // Copy current cart items
+    userEmail: currentUser ? currentUser.email : "guest"
+  };
+  savedOrders.unshift(newOrder);
+  localStorage.setItem("urbancart_orders", JSON.stringify(savedOrders));
+}
+
+function renderDashboard() {
+  const profileNameEl = document.getElementById("profileName");
+  const profileEmailEl = document.getElementById("profileEmail");
+  const profileStatusBadgeEl = document.getElementById("profileStatusBadge");
+  const ordersListEl = document.getElementById("ordersList");
+
+  if (!profileNameEl || !profileEmailEl || !ordersListEl) return;
+
+  if (currentUser) {
+    profileNameEl.textContent = currentUser.name;
+    profileEmailEl.textContent = currentUser.email;
+    profileStatusBadgeEl.textContent = "Verified Member";
+    profileStatusBadgeEl.style.background = "rgba(16, 185, 129, 0.15)";
+    profileStatusBadgeEl.style.color = "#10b981";
+  } else {
+    profileNameEl.textContent = "Guest User";
+    profileEmailEl.textContent = "guest@urbancart.demo";
+    profileStatusBadgeEl.textContent = "Guest Session";
+    profileStatusBadgeEl.style.background = "rgba(107, 114, 128, 0.15)";
+    profileStatusBadgeEl.style.color = "var(--muted)";
+  }
+
+  const allOrders = JSON.parse(localStorage.getItem("urbancart_orders") || "[]");
+  const userEmail = currentUser ? currentUser.email : "guest";
+  const userOrders = allOrders.filter(order => order.userEmail === userEmail);
+
+  if (!userOrders.length) {
+    ordersListEl.innerHTML = `
+      <div class="no-orders-hint">
+        <i class="ri-history-line"></i>
+        <p>No orders found in this session.</p>
+        <p class="cart-empty-hint">Completed payments will show up here.</p>
+      </div>
+    `;
+    return;
+  }
+
+  ordersListEl.innerHTML = userOrders.map((order, index) => {
+    const dateFormatted = new Date(order.date).toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    const statusClass = order.status === "COMPLETED" ? "completed" : order.status === "PENDING" ? "pending" : "failed";
+    const statusText = order.status === "COMPLETED" ? "Success" : order.status === "PENDING" ? "Pending" : "Failed";
+    const itemsCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
+
+    return `
+      <div class="order-item">
+        <div class="order-info">
+          <span class="order-date">${dateFormatted}</span>
+          <span class="order-meta">${itemsCount} item${itemsCount > 1 ? "s" : ""} · Ref: ${order.id}</span>
+        </div>
+        <div class="order-actions-wrap">
+          <span class="order-status-badge ${statusClass}">${statusText}</span>
+          <span class="order-total font-semibold">$${order.amount.toFixed(2)}</span>
+          <button type="button" class="view-receipt-btn" data-index="${index}">View Receipt</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function showReceipt(order) {
+  const receiptContentEl = document.getElementById("receiptContent");
+  if (!receiptContentEl) return;
+
+  const dateFormatted = new Date(order.date).toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  const itemsHtml = order.items.map(item => `
+    <div class="receipt-item-row">
+      <span>${item.name}</span>
+      <span class="qty">x${item.quantity}</span>
+      <span class="price-val">$${(item.price * item.quantity).toFixed(2)}</span>
+    </div>
+  `).join("");
+
+  receiptContentEl.innerHTML = `
+    <div class="receipt-header">
+      <h4>UrbanCart Store</h4>
+      <p>Official Purchase Receipt</p>
+    </div>
+    <div class="receipt-divider"></div>
+    <div class="receipt-meta-grid">
+      <span class="receipt-meta-label">Date:</span>
+      <span class="receipt-meta-val">${dateFormatted}</span>
+      <span class="receipt-meta-label">Ref ID:</span>
+      <span class="receipt-meta-val">${order.id}</span>
+      <span class="receipt-meta-label">Paid Via:</span>
+      <span class="receipt-meta-val">M-Pesa Checkout</span>
+      <span class="receipt-meta-label">Payer:</span>
+      <span class="receipt-meta-val">${order.payerPhone}</span>
+      <span class="receipt-meta-label">Receiver:</span>
+      <span class="receipt-meta-val">${MPESA_RECEIVER}</span>
+    </div>
+    <div class="receipt-divider"></div>
+    <div class="receipt-table-header">
+      <span>Item</span>
+      <span class="qty">Qty</span>
+      <span class="price-val">Total</span>
+    </div>
+    <div class="receipt-items-list">
+      ${itemsHtml}
+    </div>
+    <div class="receipt-divider"></div>
+    <div class="receipt-total-row">
+      <span>Grand Total:</span>
+      <span>$${order.amount.toFixed(2)}</span>
+    </div>
+    <div class="receipt-footer-note">
+      Thank you for shopping with us!
+    </div>
+  `;
+
+  document.getElementById("receiptModal").classList.remove("hidden");
+  document.getElementById("receiptModal").setAttribute("aria-hidden", "false");
+}
+
+function showDashboardModal() {
+  renderDashboard();
+  document.getElementById("dashboardModal").classList.remove("hidden");
+  document.getElementById("dashboardModal").setAttribute("aria-hidden", "false");
+}
+
+function hideDashboardModal() {
+  document.getElementById("dashboardModal").classList.add("hidden");
+  document.getElementById("dashboardModal").setAttribute("aria-hidden", "true");
+}
+
+function hideReceiptModal() {
+  document.getElementById("receiptModal").classList.add("hidden");
+  document.getElementById("receiptModal").setAttribute("aria-hidden", "true");
+}
+
 async function apiRequest(path, method = "GET", body = null, token = null) {
   const headers = { "Content-Type": "application/json" };
   if (token) headers.Authorization = `Bearer ${token}`;
@@ -494,12 +652,15 @@ async function initiateMpesaPayment(event) {
 
     if (result.demo) {
       showToast("Demo checkout complete — cart cleared.", "neutral");
+      saveOrderToLocalStorage(result, amount, normalizedPhone);
       cart.length = 0;
+      saveCart();
       renderCart();
       setCartOpen(false);
       setTimeout(() => hidePaymentModal(), 1600);
     } else {
       showToast("STK push sent — complete payment on your phone.", "success");
+      saveOrderToLocalStorage({ ...result, demo: false }, amount, normalizedPhone);
     }
   } catch (error) {
     setPaymentMessage(error.message || "Payment initiation failed.", true);
@@ -602,7 +763,9 @@ document.addEventListener("click", (event) => {
   if (resetBtn) {
     megaCategoryFilter = "";
     megaSearchQuery = "";
+    megaSortBy = "default";
     if (catalogSearch) catalogSearch.value = "";
+    if (catalogSort) catalogSort.value = "default";
     setMegaFilterButtons();
     renderMegaProducts();
   }
@@ -647,9 +810,63 @@ if (paymentModal) {
   });
 }
 
+// Dashboard and Receipt Modals
+const dashboardBtn = document.getElementById("dashboardBtn");
+const closeDashboardModalBtn = document.getElementById("closeDashboardModal");
+const closeReceiptModalBtn = document.getElementById("closeReceiptModal");
+const dashboardModal = document.getElementById("dashboardModal");
+const receiptModal = document.getElementById("receiptModal");
+const printReceiptBtn = document.getElementById("printReceiptBtn");
+const ordersList = document.getElementById("ordersList");
+
+if (dashboardBtn) {
+  dashboardBtn.addEventListener("click", showDashboardModal);
+}
+if (closeDashboardModalBtn) {
+  closeDashboardModalBtn.addEventListener("click", hideDashboardModal);
+}
+if (closeReceiptModalBtn) {
+  closeReceiptModalBtn.addEventListener("click", hideReceiptModal);
+}
+if (dashboardModal) {
+  dashboardModal.addEventListener("click", (event) => {
+    if (event.target === dashboardModal) hideDashboardModal();
+  });
+}
+if (receiptModal) {
+  receiptModal.addEventListener("click", (event) => {
+    if (event.target === receiptModal) hideReceiptModal();
+  });
+}
+if (printReceiptBtn) {
+  printReceiptBtn.addEventListener("click", () => window.print());
+}
+if (ordersList) {
+  ordersList.addEventListener("click", (event) => {
+    const btn = event.target.closest(".view-receipt-btn");
+    if (btn) {
+      const index = Number(btn.dataset.index);
+      const allOrders = JSON.parse(localStorage.getItem("urbancart_orders") || "[]");
+      const userEmail = currentUser ? currentUser.email : "guest";
+      const userOrders = allOrders.filter(order => order.userEmail === userEmail);
+      const order = userOrders[index];
+      if (order) {
+        showReceipt(order);
+      }
+    }
+  });
+}
+
 if (catalogSearch) {
   catalogSearch.addEventListener("input", () => {
     megaSearchQuery = catalogSearch.value;
+    renderMegaProducts();
+  });
+}
+
+if (catalogSort) {
+  catalogSort.addEventListener("change", () => {
+    megaSortBy = catalogSort.value;
     renderMegaProducts();
   });
 }
@@ -731,6 +948,8 @@ document.addEventListener("keydown", (e) => {
   setCartOpen(false);
   hideAuthModal();
   hidePaymentModal();
+  hideDashboardModal();
+  hideReceiptModal();
 });
 
 // Theme toggle logic

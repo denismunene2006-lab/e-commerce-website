@@ -134,6 +134,16 @@
           <button type="button" class="filter-chip" data-filter="Electronics">Electronics</button>
           <button type="button" class="filter-chip" data-filter="Home">Home</button>
         </div>
+        <label class="catalog-sort-wrap">
+          <span class="catalog-sort-label">Sort by</span>
+          <select id="catalogSort" aria-label="Sort catalog products">
+            <option value="default">Featured</option>
+            <option value="name-asc">Name (A–Z)</option>
+            <option value="price-asc">Price (Low to High)</option>
+            <option value="price-desc">Price (High to Low)</option>
+            <option value="rating-desc">Rating (High to Low)</option>
+          </select>
+        </label>
         <p id="catalogCount" class="catalog-count" aria-live="polite"></p>
       </div>
       <div class="products mega-products" id="megaProducts"></div>
