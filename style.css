@@ -71,6 +71,12 @@ html.theme-transitioning *::after {
   padding: 0;
 }
 
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
 body {
   font-family: "Outfit", system-ui, -apple-system, sans-serif;
   color: var(--ink);
@@ -1625,12 +1631,23 @@ section {
     grid-template-columns: 1fr;
   }
 
+  .topbar {
+    flex-wrap: wrap;
+  }
+
   .menu-toggle {
     display: inline-flex;
   }
 
-  .topbar-end .top-actions {
-    flex-wrap: nowrap;
+  .topbar-end {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .top-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
   .auth-status {
@@ -1711,6 +1728,18 @@ section {
 }
 
 @media (max-width: 520px) {
+  .topbar {
+    gap: 10px;
+  }
+
+  .topbar-end {
+    gap: 8px;
+  }
+
+  .top-actions {
+    gap: 8px;
+  }
+
   .products {
     grid-template-columns: 1fr;
   }
