@@ -78,6 +78,13 @@ body {
   overflow-x: clip;
 }
 
+html.nav-locked,
+body.nav-locked {
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+}
+
 body {
   font-family: "Outfit", system-ui, -apple-system, sans-serif;
   color: var(--ink);
@@ -1686,6 +1693,10 @@ main {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+    max-height: calc(100dvh - var(--topbar-offset) - 16px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out),
       visibility 0.25s;
   }

@@ -932,9 +932,11 @@ function setNavOpen(open) {
   if (open) {
     navScrollY = window.scrollY || window.pageYOffset || 0;
     document.body.classList.add("nav-locked");
+    document.documentElement.classList.add("nav-locked");
     document.body.style.top = `-${navScrollY}px`;
   } else {
     document.body.classList.remove("nav-locked");
+    document.documentElement.classList.remove("nav-locked");
     document.body.style.top = "";
     window.scrollTo(0, navScrollY);
   }
