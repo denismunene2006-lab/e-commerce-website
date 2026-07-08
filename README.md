@@ -1,4 +1,4 @@
-# 🛒 UrbanCart — Full-Stack E-Commerce Demo
+# 🛒 UrbanCart — Full-Stack E-Commerce Demo.
 
 **UrbanCart** is a full-stack e-commerce demo application built with vanilla HTML, CSS, and JavaScript on the frontend, backed by a Node.js/Express REST API. It showcases core e-commerce functionality — product browsing, search & category filtering, cart management, JWT-based authentication, and M-Pesa payment integration (live Daraja STK push **or** built-in simulation for local demos).
 
@@ -177,7 +177,7 @@ This is a personal demo project, but contributions, suggestions, and bug reports
 
 ## ⭐ Support
 
-If you find this project useful or interesting, please **star** the repo on GitHub — it helps a lot!
+If you find this project useful or interesting, please **star** the repo on GitHub — it helps a lot!🎖️
 
 [⭐ Star on GitHub](https://github.com/denismunene2006-lab/e-commerce-website)
 
