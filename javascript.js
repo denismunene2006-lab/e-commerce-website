@@ -918,6 +918,7 @@ if (newsletterForm && newsletterEmail && newsletterHint) {
 const menuToggle = document.querySelector(".menu-toggle");
 const siteNav = document.getElementById("siteNav");
 const navBackdrop = document.getElementById("navBackdrop");
+let navScrollY = 0;
 
 function setNavOpen(open) {
   if (!menuToggle || !siteNav) return;
@@ -927,7 +928,16 @@ function setNavOpen(open) {
   }
   menuToggle.classList.toggle("nav-open", open);
   menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
-  document.body.classList.toggle("nav-locked", open);
+
+  if (open) {
+    navScrollY = window.scrollY || window.pageYOffset || 0;
+    document.body.classList.add("nav-locked");
+    document.body.style.top = `-${navScrollY}px`;
+  } else {
+    document.body.classList.remove("nav-locked");
+    document.body.style.top = "";
+    window.scrollTo(0, navScrollY);
+  }
 }
 
 if (menuToggle && siteNav) {
