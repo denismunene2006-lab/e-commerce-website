@@ -1011,7 +1011,23 @@ if (menuToggle && siteNav) {
     navBackdrop.addEventListener("click", () => setNavOpen(false));
   }
   siteNav.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => setNavOpen(false));
+    link.addEventListener("click", (event) => {
+      const target = link.getAttribute("href") || "#";
+      const hash = target === "#" ? "" : target;
+
+      event.preventDefault();
+      setNavOpen(false);
+      hidePaymentModal();
+
+      // Leave the checkout route before applying the section hash so nav links
+      // always return to the storefront and scroll to their intended section.
+      window.history.pushState({}, "", `/${hash}`);
+      if (hash) {
+        document.querySelector(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
   });
 }
 
