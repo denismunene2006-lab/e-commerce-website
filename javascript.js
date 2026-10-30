@@ -153,7 +153,7 @@ function productCard(item) {
           <div class="rating"><i class="ri-star-fill"></i> ${item.rating} <span class="reviews">(${item.reviews} reviews)</span></div>
         </div>
         <div class="price-row">
-          <span class="price">$${item.price.toFixed(2)}</span>
+          <span class="price">KSh ${Math.round(item.price * 130).toLocaleString("en-KE")}</span>
           <button type="button" class="add" data-id="${item.id}">Add to Cart</button>
         </div>
       </div>
@@ -311,14 +311,14 @@ function renderCart() {
           <span class="qty-value">${c.quantity}</span>
           <button type="button" class="qty-btn" data-action="inc" data-index="${i}" aria-label="Increase quantity for ${c.name}">+</button>
         </span>
-        <span>$${(c.price * c.quantity).toFixed(2)}</span>
+        <span>KSh ${(Math.round(c.price * 130) * c.quantity).toLocaleString("en-KE")}</span>
         <button type="button" class="item-remove" data-index="${i}" aria-label="Remove ${c.name}"><i class="ri-delete-bin-line" aria-hidden="true"></i></button>
       </div>
     </div>
   `
     )
     .join("");
-  cartTotalEl.textContent = getCartTotal().toFixed(2);
+  cartTotalEl.textContent = Math.round(getCartTotal() * 130).toLocaleString("en-KE");
   saveCart();
 }
 
@@ -403,7 +403,7 @@ function showPaymentModal() {
     return;
   }
 
-  paymentAmount.value = Math.max(1, Math.round(getCartTotal()));
+  paymentAmount.value = Math.max(1, Math.round(getCartTotal() * 130));
   paymentPhone.value = "";
   paymentItemCount.textContent = String(cart.length);
   setPaymentMessage(`You’ll pay to ${MPESA_RECEIVER}. Use a valid Safaricom number for STK in live mode.`);
@@ -491,7 +491,7 @@ function renderDashboard() {
         </div>
         <div class="order-actions-wrap">
           <span class="order-status-badge ${statusClass}">${statusText}</span>
-          <span class="order-total font-semibold">$${order.amount.toFixed(2)}</span>
+          <span class="order-total font-semibold">KSh ${Math.round(order.amount * 130).toLocaleString("en-KE")}</span>
           <button type="button" class="view-receipt-btn" data-index="${index}">View Receipt</button>
         </div>
       </div>
@@ -515,7 +515,7 @@ function showReceipt(order) {
     <div class="receipt-item-row">
       <span>${item.name}</span>
       <span class="qty">x${item.quantity}</span>
-      <span class="price-val">$${(item.price * item.quantity).toFixed(2)}</span>
+      <span class="price-val">KSh ${(Math.round(item.price * 130) * item.quantity).toLocaleString("en-KE")}</span>
     </div>
   `).join("");
 
@@ -549,7 +549,7 @@ function showReceipt(order) {
     <div class="receipt-divider"></div>
     <div class="receipt-total-row">
       <span>Grand Total:</span>
-      <span>$${order.amount.toFixed(2)}</span>
+      <span>KSh ${Math.round(order.amount * 130).toLocaleString("en-KE")}</span>
     </div>
     <div class="receipt-footer-note">
       Thank you for shopping with us!
@@ -796,8 +796,16 @@ togglePassword.addEventListener("click", () => {
 });
 
 if (checkoutBtn) {
-  checkoutBtn.addEventListener("click", showPaymentModal);
+  checkoutBtn.addEventListener("click", () => {
+    if (!cart.length) return;
+    window.history.pushState({}, "", "/checkout");
+    showPaymentModal();
+  });
 }
+
+window.addEventListener("popstate", () => {
+  if (window.location.pathname === "/checkout") showPaymentModal();
+});
 if (closePaymentModalBtn) {
   closePaymentModalBtn.addEventListener("click", hidePaymentModal);
 }
