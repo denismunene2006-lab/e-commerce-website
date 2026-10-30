@@ -127,6 +127,8 @@ const paymentAmount = document.getElementById("paymentAmount");
 const paymentMessage = document.getElementById("paymentMessage");
 const paymentSubmitBtn = document.getElementById("paymentSubmitBtn");
 const paymentItemCount = document.getElementById("paymentItemCount");
+const orderSuccessModal = document.getElementById("orderSuccessModal");
+const orderSuccessDetails = document.getElementById("orderSuccessDetails");
 const demoPayHint = document.getElementById("demoPayHint");
 
 const newsletterForm = document.getElementById("newsletterForm");
@@ -402,6 +404,12 @@ function showPaymentModal() {
     showToast("Your cart is empty — add something first.", "error");
     return;
   }
+  if (!currentUser) {
+    setCartOpen(false);
+    showToast("Please log in before checkout.", "error");
+    showAuthModal(true);
+    return;
+  }
 
   paymentAmount.value = Math.max(1, Math.round(getCartTotal() * 130));
   paymentPhone.value = "";
@@ -432,6 +440,14 @@ function saveOrderToLocalStorage(result, amount, phone) {
   };
   savedOrders.unshift(newOrder);
   localStorage.setItem("urbancart_orders", JSON.stringify(savedOrders));
+  return newOrder;
+}
+
+function showOrderSuccess(order) {
+  if (!orderSuccessModal || !orderSuccessDetails) return;
+  orderSuccessDetails.innerHTML = `<div class="success-order-row"><span>Order ID</span><strong>${order.id}</strong></div><div class="success-order-row"><span>Status</span><strong class="success-status">Payment successful</strong></div><div class="success-order-row"><span>Total paid</span><strong>KSh ${Number(order.amount).toLocaleString("en-KE")}</strong></div><div class="success-order-row"><span>Items</span><strong>${order.items.reduce((sum, item) => sum + item.quantity, 0)}</strong></div><div class="success-order-row"><span>Customer</span><strong>${order.userEmail}</strong></div>`;
+  orderSuccessModal.classList.remove("hidden");
+  orderSuccessModal.setAttribute("aria-hidden", "false");
 }
 
 function renderDashboard() {
@@ -652,7 +668,8 @@ async function initiateMpesaPayment(event) {
 
     if (result.demo) {
       showToast("Demo checkout complete — cart cleared.", "neutral");
-      saveOrderToLocalStorage(result, amount, normalizedPhone);
+      const completedOrder = saveOrderToLocalStorage(result, amount, normalizedPhone);
+      showOrderSuccess(completedOrder);
       cart.length = 0;
       saveCart();
       renderCart();
@@ -793,6 +810,10 @@ togglePassword.addEventListener("click", () => {
   const type = authPassword.getAttribute("type") === "password" ? "text" : "password";
   authPassword.setAttribute("type", type);
   togglePassword.innerHTML = type === "password" ? '<i class="ri-eye-line"></i>' : '<i class="ri-eye-off-line"></i>';
+});
+
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".cart-empty-cta")) setCartOpen(false);
 });
 
 if (checkoutBtn) {

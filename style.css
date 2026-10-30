@@ -1844,6 +1844,16 @@ main {
 }
 
 /* Modals sizing overrides */
+.order-success-card { max-width: 460px; text-align: center; }
+.success-icon { width: 64px; height: 64px; margin: 4px auto 16px; display: grid; place-items: center; border-radius: 50%; background: rgba(16,185,129,.14); color: #059669; font-size: 2rem; }
+.success-lead { color: var(--muted); margin: -6px 0 20px; }
+.success-order-details { display: grid; gap: 0; text-align: left; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 16px; }
+.success-order-row { display: flex; justify-content: space-between; gap: 16px; padding: 12px 14px; background: var(--surface); border-bottom: 1px solid var(--border); font-size: .88rem; }
+.success-order-row:last-child { border-bottom: 0; }
+.success-order-row span { color: var(--muted); }
+.success-order-row strong { text-align: right; overflow-wrap: anywhere; }
+.success-status { color: #059669; }
+
 .modal-card-dashboard {
   max-width: min(600px, 95vw);
 }

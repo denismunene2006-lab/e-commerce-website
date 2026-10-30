@@ -310,6 +310,17 @@
     </div>
   </div>
 
+  <div id="orderSuccessModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-card order-success-card">
+      <div class="success-icon"><i class="ri-check-line" aria-hidden="true"></i></div>
+      <h3>Order confirmed</h3>
+      <p class="success-lead">Your demo order was placed successfully.</p>
+      <div id="orderSuccessDetails" class="success-order-details"></div>
+      <p class="demo-payment-note"><i class="ri-information-line" aria-hidden="true"></i> Demo only: no real payment was processed. A production store would connect a live payment gateway here.</p>
+      <button type="button" class="btn auth-submit" onclick="document.getElementById('orderSuccessModal').classList.add('hidden')">Continue shopping</button>
+    </div>
+  </div>
+
   <div id="dashboardModal" class="modal hidden" aria-hidden="true">
     <div class="modal-card modal-card-dashboard">
       <div class="modal-head">
