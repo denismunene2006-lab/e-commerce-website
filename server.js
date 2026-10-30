@@ -443,12 +443,16 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ message: "Internal server error." });
 });
 
-app.listen(PORT, () => {
-  ensureDataFiles();
-  console.log(`UrbanCart API running on http://localhost:${PORT}`);
-  if (getMissingMpesaConfig().length && MPESA_DEMO_STUB) {
-    console.log(
-      "[UrbanCart] M-Pesa env vars incomplete — POST /api/payments/mpesa uses demo simulation (no real STK push)."
-    );
-  }
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    ensureDataFiles();
+    console.log(`UrbanCart API running on http://localhost:${PORT}`);
+    if (getMissingMpesaConfig().length && MPESA_DEMO_STUB) {
+      console.log(
+        "[UrbanCart] M-Pesa env vars incomplete — POST /api/payments/mpesa uses demo simulation (no real STK push)."
+      );
+    }
+  });
+}
+
+module.exports = app;
