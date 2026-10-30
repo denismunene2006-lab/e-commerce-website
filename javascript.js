@@ -123,6 +123,8 @@ const paymentModal = document.getElementById("paymentModal");
 const closePaymentModalBtn = document.getElementById("closePaymentModal");
 const paymentForm = document.getElementById("paymentForm");
 const paymentPhone = document.getElementById("paymentPhone");
+const paymentName = document.getElementById("paymentName");
+const paymentEmail = document.getElementById("paymentEmail");
 const paymentAmount = document.getElementById("paymentAmount");
 const paymentMessage = document.getElementById("paymentMessage");
 const paymentSubmitBtn = document.getElementById("paymentSubmitBtn");
@@ -398,12 +400,20 @@ async function loadPaymentMeta() {
 }
 
 function showPaymentModal() {
+  if (!currentUser) {
+    showToast("Please log in to continue to checkout.", "neutral");
+    setAuthMode(true);
+    showAuthModal();
+    return;
+  }
   if (!cart.length) {
     showToast("Your cart is empty — add something first.", "error");
     return;
   }
 
   paymentAmount.value = Math.max(1, Math.round(getCartTotal() * 130));
+  paymentName.value = currentUser.name;
+  paymentEmail.value = currentUser.email;
   paymentPhone.value = "";
   paymentItemCount.textContent = String(cart.length);
   setPaymentMessage(`You’ll pay to ${MPESA_RECEIVER}. Use a valid Safaricom number for STK in live mode.`);
@@ -432,15 +442,20 @@ function saveOrderToLocalStorage(result, amount, phone) {
   };
   savedOrders.unshift(newOrder);
   localStorage.setItem("urbancart_orders", JSON.stringify(savedOrders));
+  return newOrder;
 }
 
 function renderDashboard() {
   const profileNameEl = document.getElementById("profileName");
   const profileEmailEl = document.getElementById("profileEmail");
   const profileStatusBadgeEl = document.getElementById("profileStatusBadge");
+  const profileAvatarEl = document.getElementById("profileAvatar");
   const ordersListEl = document.getElementById("ordersList");
 
   if (!profileNameEl || !profileEmailEl || !ordersListEl) return;
+
+  const savedAvatar = currentUser ? localStorage.getItem(`urbancart_avatar_${currentUser.id}`) : null;
+  profileAvatarEl.innerHTML = savedAvatar ? `<img src="${savedAvatar}" alt="Profile picture" />` : '<i class="ri-user-line"></i>';
 
   if (currentUser) {
     profileNameEl.textContent = currentUser.name;
@@ -651,13 +666,16 @@ async function initiateMpesaPayment(event) {
     setPaymentMessage(`${result.message || "Request completed."}${checkoutId}`);
 
     if (result.demo) {
-      showToast("Demo checkout complete — cart cleared.", "neutral");
-      saveOrderToLocalStorage(result, amount, normalizedPhone);
+      const completedOrder = saveOrderToLocalStorage(result, amount, normalizedPhone);
+      showToast("Payment successful — your order is confirmed.", "success");
       cart.length = 0;
       saveCart();
       renderCart();
       setCartOpen(false);
-      setTimeout(() => hidePaymentModal(), 1600);
+      setTimeout(() => {
+        hidePaymentModal();
+        showReceipt(completedOrder);
+      }, 700);
     } else {
       showToast("STK push sent — complete payment on your phone.", "success");
       saveOrderToLocalStorage({ ...result, demo: false }, amount, normalizedPhone);
@@ -795,11 +813,26 @@ togglePassword.addEventListener("click", () => {
   togglePassword.innerHTML = type === "password" ? '<i class="ri-eye-line"></i>' : '<i class="ri-eye-off-line"></i>';
 });
 
-if (checkoutBtn) {
+  if (checkoutBtn) {
   checkoutBtn.addEventListener("click", () => {
     if (!cart.length) return;
+    if (!currentUser) {
+      setCartOpen(false);
+      showToast("Please log in to continue to checkout.", "neutral");
+      setAuthMode(true);
+      showAuthModal();
+      return;
+    }
+    setCartOpen(false);
     window.history.pushState({}, "", "/checkout");
     showPaymentModal();
+  });
+}
+
+const cartBrowseButton = document.getElementById("cartItems");
+if (cartBrowseButton) {
+  cartBrowseButton.addEventListener("click", (event) => {
+    if (event.target.closest(".cart-empty-cta")) setCartOpen(false);
   });
 }
 
@@ -829,6 +862,26 @@ const ordersList = document.getElementById("ordersList");
 
 if (dashboardBtn) {
   dashboardBtn.addEventListener("click", showDashboardModal);
+}
+
+const profilePictureInput = document.getElementById("profilePictureInput");
+if (profilePictureInput) {
+  profilePictureInput.addEventListener("change", () => {
+    const file = profilePictureInput.files?.[0];
+    if (!file || !currentUser) return;
+    if (!file.type.startsWith("image/") || file.size > 2 * 1024 * 1024) {
+      showToast("Choose an image smaller than 2MB.", "error");
+      profilePictureInput.value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      localStorage.setItem(`urbancart_avatar_${currentUser.id}`, reader.result);
+      renderDashboard();
+      showToast("Profile picture updated.");
+    });
+    reader.readAsDataURL(file);
+  });
 }
 if (closeDashboardModalBtn) {
   closeDashboardModalBtn.addEventListener("click", hideDashboardModal);

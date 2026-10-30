@@ -297,6 +297,16 @@
       <p class="payment-receiver">Receiver: <strong>0710236087</strong> <span id="demoPayHint" class="payment-demo-hint hidden"></span></p>
       <p id="paymentMessage" class="auth-message"></p>
       <form id="paymentForm" class="auth-form auth-form-pay">
+        <div class="checkout-contact-grid">
+          <div class="form-field">
+            <label for="paymentName">Full name</label>
+            <input id="paymentName" type="text" required autocomplete="name" readonly />
+          </div>
+          <div class="form-field">
+            <label for="paymentEmail">Email</label>
+            <input id="paymentEmail" type="email" required autocomplete="email" readonly />
+          </div>
+        </div>
         <div class="form-field">
           <label for="paymentPhone">Your M-Pesa number</label>
           <input id="paymentPhone" type="tel" placeholder="07XXXXXXXX" required autocomplete="tel" />
@@ -317,7 +327,11 @@
         <button type="button" id="closeDashboardModal" class="modal-close" aria-label="Close dashboard"><i class="ri-close-line"></i></button>
       </div>
       <div class="dashboard-profile-section">
-        <div class="profile-avatar"><i class="ri-user-line"></i></div>
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar" id="profileAvatar"><i class="ri-user-line"></i></div>
+          <label class="profile-upload-btn" for="profilePictureInput" title="Upload profile picture"><i class="ri-camera-line" aria-hidden="true"></i><span class="sr-only">Upload profile picture</span></label>
+          <input id="profilePictureInput" type="file" accept="image/*" hidden />
+        </div>
         <div class="profile-info">
           <h4 id="profileName">Guest User</h4>
           <p id="profileEmail">guest@urbancart.demo</p>
