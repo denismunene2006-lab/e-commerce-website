@@ -52,6 +52,11 @@
   </header>
 
   <main>
+    <section class="demo-notice" aria-label="Demo store notice">
+      <div class="demo-notice-icon"><i class="ri-flask-line" aria-hidden="true"></i></div>
+      <div><strong>You’re browsing an UrbanCart demo</strong><span>Explore the full shopping journey — checkout and payment are simulated for demonstration.</span></div>
+      <a href="#shop">Start shopping <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+    </section>
     <section class="hero">
       <div class="hero-text">
         <p class="tag">New Collection 2026</p>
@@ -67,13 +72,13 @@
 
     <section class="marquee">
       <div class="marquee-track">
-        <span><i class="ri-truck-line"></i> Free Shipping Over $50</span>
+        <span><i class="ri-truck-line"></i> Free Shipping Over KSh 6,500</span>
         <span><i class="ri-customer-service-2-line"></i> 24/7 Support</span>
         <span><i class="ri-shield-check-line"></i> Secure Checkout</span>
         <span><i class="ri-refresh-line"></i> 7-Day Returns</span>
         <span><i class="ri-flashlight-line"></i> Limited Flash Offers</span>
         <!-- Duplicate for loop -->
-        <span><i class="ri-truck-line"></i> Free Shipping Over $50</span>
+        <span><i class="ri-truck-line"></i> Free Shipping Over KSh 6,500</span>
         <span><i class="ri-customer-service-2-line"></i> 24/7 Support</span>
         <span><i class="ri-shield-check-line"></i> Secure Checkout</span>
         <span><i class="ri-refresh-line"></i> 7-Day Returns</span>
@@ -257,8 +262,9 @@
     </div>
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-foot">
-      <p>Total: $<span id="cartTotal">0.00</span></p>
-      <button id="checkoutBtn" class="btn checkout">Pay with M-Pesa</button>
+      <p>Total: KSh <span id="cartTotal">0.00</span></p>
+      <button id="checkoutBtn" class="btn checkout">Proceed to checkout <i class="ri-arrow-right-line" aria-hidden="true"></i></button>
+      <p class="demo-payment-note"><i class="ri-information-line" aria-hidden="true"></i> Demo checkout — no real payment will be processed.</p>
     </div>
   </aside>
 
@@ -284,7 +290,7 @@
   <div id="paymentModal" class="modal hidden" aria-hidden="true">
     <div class="modal-card modal-card-payment">
       <div class="modal-head">
-        <h3>M-Pesa Checkout</h3>
+        <h3>Checkout · Demo payment</h3>
         <button type="button" id="closePaymentModal" class="modal-close"><i class="ri-close-line"></i></button>
       </div>
       <p class="payment-order-summary"><span id="paymentItemCount">0</span> items · amount matches your cart total (demo store).</p>
@@ -296,7 +302,7 @@
           <input id="paymentPhone" type="tel" placeholder="07XXXXXXXX" required autocomplete="tel" />
         </div>
         <div class="form-field">
-          <label for="paymentAmount">Amount</label>
+          <label for="paymentAmount">Amount (KSh)</label>
           <input id="paymentAmount" type="number" min="1" step="1" required />
         </div>
         <button type="submit" class="btn auth-submit" id="paymentSubmitBtn">Initiate payment</button>
