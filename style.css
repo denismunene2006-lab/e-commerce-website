@@ -1679,21 +1679,29 @@ main {
   }
 
   .topbar {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: 10px;
+  }
+
+  .logo {
+    flex: 0 1 auto;
+    min-width: 0;
   }
 
   .menu-toggle {
     display: inline-flex;
+    flex: 0 0 auto;
   }
 
   .topbar-end {
-    width: 100%;
-    justify-content: space-between;
+    width: auto;
+    min-width: 0;
+    margin-left: auto;
   }
 
   .top-actions {
-    width: 100%;
-    flex-wrap: wrap;
+    width: auto;
+    flex-wrap: nowrap;
     justify-content: flex-end;
   }
 
@@ -1746,7 +1754,7 @@ main {
   }
 
   .products {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .about-grid,
@@ -1784,7 +1792,8 @@ main {
 }
 
 @media (max-width: 700px) {
-  .cat-grid {
+  .cat-grid,
+  .products {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -1813,7 +1822,7 @@ main {
   }
 
   .products {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .top-actions .auth-btn {
