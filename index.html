@@ -329,14 +329,13 @@
       <div class="dashboard-profile-section">
         <div class="profile-avatar-wrap">
           <div class="profile-avatar" id="profileAvatar"><i class="ri-user-line"></i></div>
-          <label class="profile-upload-btn" for="profilePictureInput" title="Upload profile picture"><i class="ri-camera-line" aria-hidden="true"></i><span class="sr-only">Upload profile picture</span></label>
-          <input id="profilePictureInput" type="file" accept="image/*" hidden />
         </div>
         <div class="profile-info">
           <h4 id="profileName">Guest User</h4>
           <p id="profileEmail">guest@urbancart.demo</p>
           <span id="profileStatusBadge" class="profile-status-badge">Guest Session</span>
         </div>
+        <button type="button" id="editProfileBtn" class="edit-profile-btn"><i class="ri-edit-line" aria-hidden="true"></i> Edit profile</button>
       </div>
       <div class="dashboard-orders-section">
         <h4>Order &amp; Transaction History</h4>
@@ -344,6 +343,22 @@
           <!-- Dynamically populated -->
         </div>
       </div>
+    </div>
+  </div>
+
+  <div id="editProfileModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-card modal-card-profile-edit">
+      <div class="modal-head">
+        <h3>Edit profile</h3>
+        <button type="button" id="closeEditProfileModal" class="modal-close" aria-label="Close edit profile"><i class="ri-close-line"></i></button>
+      </div>
+      <p id="profileEditMessage" class="auth-message" role="status"></p>
+      <form id="profileEditForm" class="auth-form">
+        <div class="form-field"><label for="profileEditName">Full name</label><input id="profileEditName" type="text" autocomplete="name" required minlength="2" /></div>
+        <div class="form-field"><label for="profileEditEmail">Email</label><input id="profileEditEmail" type="email" autocomplete="email" required /></div>
+        <div class="form-field"><label for="profilePictureInput">Profile picture</label><input id="profilePictureInput" type="file" accept="image/*" /></div>
+        <button type="submit" class="btn auth-submit">Save changes</button>
+      </form>
     </div>
   </div>
 

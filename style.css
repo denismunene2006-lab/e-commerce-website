@@ -1665,7 +1665,7 @@ main {
   }
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1180px) {
   :root {
     --topbar-offset: 128px;
   }
@@ -1845,7 +1845,11 @@ main {
 
 /* Modals sizing overrides */
 .modal-card-dashboard {
-  max-width: min(600px, 95vw);
+  max-width: min(680px, 95vw);
+}
+
+.modal-card-profile-edit {
+  max-width: min(480px, 95vw);
 }
 
 .modal-card-receipt {
@@ -1870,8 +1874,8 @@ main {
   }
 
   .profile-avatar {
-  width: 56px;
-  height: 56px;
+  width: 84px;
+  height: 84px;
   border-radius: 999px;
   overflow: hidden;
   background: var(--accent-soft);
@@ -1886,6 +1890,26 @@ main {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  image-rendering: auto;
+}
+
+.edit-profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+  background: var(--accent-soft);
+  color: var(--accent-badge-text);
+  padding: 10px 14px;
+  border-radius: 999px;
+  font: 700 .84rem inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.edit-profile-btn:hover {
+  background: color-mix(in srgb, var(--accent) 22%, var(--bg-elevated));
 }
 
 .profile-upload-btn {
@@ -1912,6 +1936,8 @@ main {
 
 @media (max-width: 520px) {
   .checkout-contact-grid { grid-template-columns: 1fr; gap: 0; }
+  .dashboard-profile-section { align-items: flex-start; flex-wrap: wrap; }
+  .edit-profile-btn { margin-left: 0; width: 100%; justify-content: center; }
 }
 
 .profile-info h4 {
