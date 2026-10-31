@@ -2250,6 +2250,81 @@ button.is-loading::after {
   padding: 8px 16px;
 }
 
+/* Responsive safety rails */
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+.modal {
+  padding: 12px;
+  align-items: flex-start;
+  overflow-y: auto;
+}
+
+.modal-card {
+  width: min(100%, 680px);
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 700px) {
+  main {
+    padding-inline: 0;
+  }
+
+  .section,
+  .hero,
+  .demo-notice,
+  .footer-inner {
+    width: min(94%, 1180px);
+  }
+
+  .hero {
+    gap: 24px;
+  }
+
+  .section-head h2 {
+    font-size: clamp(1.35rem, 5vw, 1.8rem);
+  }
+
+  .product-card,
+  .cat-grid article {
+    min-width: 0;
+  }
+
+  .product-card h3,
+  .cat-grid h3 {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 420px) {
+  .topbar {
+    padding-inline: 3%;
+  }
+
+  .auth-status {
+    max-width: 36vw;
+  }
+
+  .modal {
+    padding: 8px;
+  }
+
+  .modal-card {
+    max-height: calc(100dvh - 16px);
+    border-radius: 18px;
+  }
+
+  .checkout-contact-grid {
+    gap: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
