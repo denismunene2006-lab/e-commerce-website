@@ -1665,7 +1665,7 @@ main {
   }
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1350px) {
   :root {
     --topbar-offset: 128px;
   }
@@ -1861,6 +1861,7 @@ main {
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-wrap: wrap;
   padding: 16px;
   background: color-mix(in srgb, var(--bg-elevated) 90%, var(--accent-soft));
   border-radius: var(--radius);
@@ -1910,6 +1911,28 @@ main {
 
 .edit-profile-btn:hover {
   background: color-mix(in srgb, var(--accent) 22%, var(--bg-elevated));
+}
+
+button.is-loading {
+  position: relative;
+  pointer-events: none;
+  color: transparent !important;
+}
+
+button.is-loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: button-spin 0.7s linear infinite;
+  color: var(--accent);
+}
+
+@keyframes button-spin {
+  to { transform: rotate(360deg); }
 }
 
 .profile-upload-btn {
