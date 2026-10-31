@@ -1749,7 +1749,6 @@ main {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .cat-grid,
   .about-grid,
   .feature-strip,
   .testimonial-grid,
@@ -1781,6 +1780,12 @@ main {
 
   .footer-col {
     align-items: center;
+  }
+}
+
+@media (max-width: 700px) {
+  .cat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
