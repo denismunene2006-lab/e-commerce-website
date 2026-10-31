@@ -12,7 +12,8 @@ const {
   ensureIndexes,
   findUserByEmail,
   findUserById,
-  updateTransactionByCheckoutId
+  updateTransactionByCheckoutId,
+  updateUserById
 } = require("./db");
 
 const app = express();
@@ -262,6 +263,25 @@ app.get("/api/me", authMiddleware, async (req, res) => {
   }
 
   return res.json({ user: sanitizeUser(user) });
+});
+
+app.patch("/api/me", authMiddleware, async (req, res) => {
+  const name = String(req.body.name || "").trim();
+  const email = String(req.body.email || "").trim().toLowerCase();
+
+  if (name.length < 2 || !/^\\S+@\\S+\\.\\S+$/.test(email)) {
+    return res.status(400).json({ message: "Enter a valid name and email." });
+  }
+
+  const existing = await findUserByEmail(email);
+  if (existing && existing.id !== req.user.id) {
+    return res.status(409).json({ message: "Email is already registered." });
+  }
+
+  const updatedUser = await updateUserById(req.user.id, { name, email });
+  if (!updatedUser) return res.status(404).json({ message: "User not found." });
+
+  return res.json({ user: sanitizeUser(updatedUser) });
 });
 
 app.post("/api/payments/mpesa", async (req, res) => {

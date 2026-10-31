@@ -859,28 +859,69 @@ const dashboardModal = document.getElementById("dashboardModal");
 const receiptModal = document.getElementById("receiptModal");
 const printReceiptBtn = document.getElementById("printReceiptBtn");
 const ordersList = document.getElementById("ordersList");
+const editProfileBtn = document.getElementById("editProfileBtn");
+const editProfileModal = document.getElementById("editProfileModal");
+const closeEditProfileModal = document.getElementById("closeEditProfileModal");
+const profileEditForm = document.getElementById("profileEditForm");
+const profileEditName = document.getElementById("profileEditName");
+const profileEditEmail = document.getElementById("profileEditEmail");
+const profilePictureInput = document.getElementById("profilePictureInput");
+const profileEditMessage = document.getElementById("profileEditMessage");
+
+function showEditProfileModal() {
+  if (!currentUser) {
+    showToast("Please log in to edit your profile.", "neutral");
+    return;
+  }
+  profileEditName.value = currentUser.name;
+  profileEditEmail.value = currentUser.email;
+  profileEditMessage.textContent = "";
+  editProfileModal.classList.remove("hidden");
+  editProfileModal.setAttribute("aria-hidden", "false");
+}
+
+function hideEditProfileModal() {
+  editProfileModal.classList.add("hidden");
+  editProfileModal.setAttribute("aria-hidden", "true");
+}
 
 if (dashboardBtn) {
   dashboardBtn.addEventListener("click", showDashboardModal);
 }
 
-const profilePictureInput = document.getElementById("profilePictureInput");
-if (profilePictureInput) {
-  profilePictureInput.addEventListener("change", () => {
+if (editProfileBtn) editProfileBtn.addEventListener("click", showEditProfileModal);
+if (closeEditProfileModal) closeEditProfileModal.addEventListener("click", hideEditProfileModal);
+if (editProfileModal) editProfileModal.addEventListener("click", (event) => {
+  if (event.target === editProfileModal) hideEditProfileModal();
+});
+if (profileEditForm) {
+  profileEditForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!currentUser) return;
     const file = profilePictureInput.files?.[0];
-    if (!file || !currentUser) return;
-    if (!file.type.startsWith("image/") || file.size > 2 * 1024 * 1024) {
-      showToast("Choose an image smaller than 2MB.", "error");
-      profilePictureInput.value = "";
+    if (file && (!file.type.startsWith("image/") || file.size > 2 * 1024 * 1024)) {
+      profileEditMessage.textContent = "Choose an image smaller than 2MB.";
       return;
     }
-    const reader = new FileReader();
-    reader.addEventListener("load", () => {
-      localStorage.setItem(`urbancart_avatar_${currentUser.id}`, reader.result);
+    try {
+      const result = await apiRequest("/me", "PATCH", { name: profileEditName.value.trim(), email: profileEditEmail.value.trim() }, getToken());
+      currentUser = result.user;
+      setAuthUI(currentUser);
+      if (file) {
+        const imageData = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.addEventListener("load", () => resolve(reader.result), { once: true });
+          reader.addEventListener("error", () => reject(new Error("Unable to read that image.")), { once: true });
+          reader.readAsDataURL(file);
+        });
+        localStorage.setItem(`urbancart_avatar_${currentUser.id}`, imageData);
+      }
       renderDashboard();
-      showToast("Profile picture updated.");
-    });
-    reader.readAsDataURL(file);
+      hideEditProfileModal();
+      showToast("Profile updated.");
+    } catch (error) {
+      profileEditMessage.textContent = error.message;
+    }
   });
 }
 if (closeDashboardModalBtn) {

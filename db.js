@@ -36,6 +36,15 @@ async function createUser(user) {
   return user;
 }
 
+async function updateUserById(id, update) {
+  const db = await getDatabase();
+  return db.collection("users").findOneAndUpdate(
+    { id },
+    { $set: update },
+    { returnDocument: "after" }
+  );
+}
+
 async function createTransaction(transaction) {
   const db = await getDatabase();
   await db.collection("transactions").insertOne(transaction);
@@ -67,5 +76,6 @@ module.exports = {
   findUserByEmail,
   findUserById,
   getUsers,
-  updateTransactionByCheckoutId
+  updateTransactionByCheckoutId,
+  updateUserById
 };
