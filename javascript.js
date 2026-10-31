@@ -745,7 +745,18 @@ function scrollToMega() {
   document.getElementById("mega-shop")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function showActionSpinner(button, duration = 1100) {
+  if (!button || button.disabled || button.classList.contains("is-loading")) return;
+  button.classList.add("is-loading");
+  window.setTimeout(() => button.classList.remove("is-loading"), duration);
+}
+
 document.addEventListener("click", (event) => {
+  const clickedButton = event.target.closest("button");
+  if (clickedButton && !clickedButton.matches(".menu-toggle, .modal-close, .edit-profile-btn, .qty-btn")) {
+    showActionSpinner(clickedButton);
+  }
+
   const addButton = event.target.closest(".add");
   if (addButton) {
     addToCart(Number(addButton.dataset.id));
