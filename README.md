@@ -6,13 +6,13 @@
 
 ---
 
-## 🚀 Demo (Static Frontend)
+## 🚀 Demo 
 
-The frontend is hosted on **GitHub Pages**:
+The frontend is hosted on **vercel**:
 
-🔗 [https://denismunene2006-lab.github.io/e-commerce-website/](https://denismunene2006-lab.github.io/e-commerce-website/)
+🔗 [https://e-commerce-website-flax-eta.vercel.app/)
 
-> ℹ️ The static Pages build **cannot** talk to `localhost`, so cart, signup, payments, and the full catalog API require running the server locally (see [Run Locally](#-run-locally)).
+
 
 ---
 
