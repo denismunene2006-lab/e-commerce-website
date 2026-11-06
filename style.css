@@ -2453,6 +2453,9 @@ svg {
   .top-actions .auth-btn { padding-inline: 8px; }
   .theme-btn, .dashboard-btn, .menu-toggle { width: 38px; min-width: 38px; height: 38px; }
   .cart-btn { padding-inline: 8px; }
+  /* Keep account access available as the compact dashboard icon on phones. */
+  .top-actions .auth-btn { display: none; }
+  .top-actions .dashboard-btn { display: inline-flex; align-items: center; justify-content: center; }
   .products { gap: 8px; }
   .product-details { padding: 10px; }
   .product h3 { font-size: .82rem; }
