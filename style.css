@@ -28,29 +28,6 @@
   --topbar-offset: 84px;
 }
 
-[data-theme="dark"] {
-  --bg: #090d16;
-  --bg-elevated: #111827;
-  --bg-glass: rgba(9, 13, 22, 0.72);
-  --ink: #f3f4f6;
-  --muted: #9ca3af;
-  --muted-soft: #6b7280;
-  --accent: #ff7c5c;
-  --accent-hover: #ff977d;
-  --accent-soft: rgba(255, 124, 92, 0.15);
-  --accent-dark: #f97316;
-  --accent-badge-text: #ffedd5;
-  --bg-product-img: #1f2937;
-  --line: rgba(255, 255, 255, 0.08);
-  --line-strong: rgba(255, 255, 255, 0.15);
-  --bg-gradient-1: rgba(232, 93, 59, 0.18);
-  --bg-gradient-2: rgba(56, 189, 248, 0.06);
-  --bg-gradient-3: rgba(99, 102, 241, 0.08);
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.55);
-}
-
 /* Smooth transition when changing theme */
 html.theme-transitioning,
 html.theme-transitioning *,
@@ -2511,4 +2488,23 @@ svg {
     position: relative;
     z-index: 2;
   }
+}
+
+/* Keep account access in the compact mobile header. */
+@media (max-width: 600px) {
+  .topbar { gap: 8px; }
+  .menu-toggle { order: 1; flex: 0 0 auto; }
+  .logo { order: 2; min-width: 0; flex: 1 1 auto; justify-content: center; }
+  .topbar-end { order: 3; margin-left: 0; }
+  .top-actions .auth-btn { display: none; }
+  .top-actions .dashboard-btn {
+    display: inline-flex;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+  }
+  .top-actions .dashboard-btn .btn-text { display: none; }
 }
