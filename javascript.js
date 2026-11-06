@@ -471,6 +471,11 @@ function renderDashboard() {
     profileStatusBadgeEl.style.color = "var(--muted)";
   }
 
+  const dashboardLoginBtn = document.getElementById("dashboardLoginBtn");
+  const dashboardLogoutBtn = document.getElementById("dashboardLogoutBtn");
+  dashboardLoginBtn?.classList.toggle("hidden", Boolean(currentUser));
+  dashboardLogoutBtn?.classList.toggle("hidden", !currentUser);
+
   const allOrders = JSON.parse(localStorage.getItem("urbancart_orders") || "[]");
   const userEmail = currentUser ? currentUser.email : "guest";
   const userOrders = allOrders.filter(order => order.userEmail === userEmail);
@@ -871,6 +876,8 @@ const receiptModal = document.getElementById("receiptModal");
 const printReceiptBtn = document.getElementById("printReceiptBtn");
 const ordersList = document.getElementById("ordersList");
 const editProfileBtn = document.getElementById("editProfileBtn");
+const dashboardLoginBtn = document.getElementById("dashboardLoginBtn");
+const dashboardLogoutBtn = document.getElementById("dashboardLogoutBtn");
 const editProfileModal = document.getElementById("editProfileModal");
 const closeEditProfileModal = document.getElementById("closeEditProfileModal");
 const profileEditForm = document.getElementById("profileEditForm");
@@ -901,6 +908,16 @@ if (dashboardBtn) {
 }
 
 if (editProfileBtn) editProfileBtn.addEventListener("click", showEditProfileModal);
+if (dashboardLoginBtn) dashboardLoginBtn.addEventListener("click", () => {
+  hideDashboardModal();
+  showAuthModal();
+});
+if (dashboardLogoutBtn) dashboardLogoutBtn.addEventListener("click", () => {
+  clearToken();
+  setAuthUI(null);
+  renderDashboard();
+  showToast("Signed out.", "neutral");
+});
 if (closeEditProfileModal) closeEditProfileModal.addEventListener("click", hideEditProfileModal);
 if (editProfileModal) editProfileModal.addEventListener("click", (event) => {
   if (event.target === editProfileModal) hideEditProfileModal();
@@ -1062,6 +1079,15 @@ if (menuToggle && siteNav) {
   if (navBackdrop) {
     navBackdrop.addEventListener("click", () => setNavOpen(false));
   }
+  document.addEventListener("click", (event) => {
+    if (!siteNav.classList.contains("nav-open")) return;
+    if (!siteNav.contains(event.target) && !menuToggle.contains(event.target)) {
+      setNavOpen(false);
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && siteNav.classList.contains("nav-open")) setNavOpen(false);
+  });
   siteNav.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", (event) => {
       const target = link.getAttribute("href") || "#";
