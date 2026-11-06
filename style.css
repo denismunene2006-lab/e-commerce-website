@@ -2458,3 +2458,54 @@ svg {
   .product h3 { font-size: .82rem; }
   .price { font-size: .9rem; }
 }
+
+/* Keep the mobile header predictable: menu left, brand center, cart/auth right. */
+@media (max-width: 520px) {
+  .topbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .menu-toggle {
+    order: 1;
+    flex: 0 0 40px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .logo {
+    order: 2;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .topbar-end {
+    order: 3;
+    flex: 0 0 auto;
+    margin-left: 0;
+  }
+
+  .top-actions {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .auth-status,
+  .dashboard-btn,
+  .theme-btn {
+    display: none;
+  }
+
+  .top-actions .auth-btn {
+    white-space: nowrap;
+  }
+
+  .cart-btn {
+    position: relative;
+    z-index: 2;
+  }
+}
